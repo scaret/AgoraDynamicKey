@@ -24,17 +24,18 @@ def main():
   builder = SimpleTokenBuilder.SimpleTokenBuilder(appID, appCertificate, channelName, uid)
   builder.token.salt = salt
   builder.token.ts = ts
-  builder.token.messages[AccessToken.kJoinChannel] = expiredTs
 
-  '''
+  builder.initPriviliges(SimpleTokenBuilder.Role_Attendee)
   print builder.token.messages
-  builder.initPriviliges(Role_Admin)
+
+  builder.setPrivilege(AccessToken.kJoinChannel, expiredTs)
+  builder.setPrivilege(AccessToken.kPublishAudioStream, expiredTs)
   print builder.token.messages
-  builder.setPrivilege(kJoinChannel, expiredTs)
+
+  builder.removePrivilege(AccessToken.kPublishAudioStream)
+  builder.removePrivilege(AccessToken.kPublishVideoStream)
+  builder.removePrivilege(AccessToken.kPublishDataStream)
   print builder.token.messages
-  builder.removePrivilege(kJoinChannel)
-  print builder.token.messages
-  '''
   
   result = builder.buildToken()
   print "Access Token:", result
