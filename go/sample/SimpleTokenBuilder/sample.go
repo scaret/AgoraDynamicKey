@@ -18,12 +18,13 @@ func main() {
 	builder.Token.Salt = uint32(1)
 	builder.Token.Ts = uint32(1111111)
 	
-	builder.Token.Message[AccessToken.KJoinChannel] = expiredTs
+	builder.InitPriviliges(SimpleTokenBuilder.Role_Attendee)
 	fmt.Println(builder.Token.Message)
-	SimpleTokenBuilder.InitPriviliges(&builder, SimpleTokenBuilder.Role_Attendee)
-	fmt.Println(builder.Token.Message)
+
 	builder.SetPrivilege(AccessToken.KJoinChannel, expiredTs)
+	builder.SetPrivilege(AccessToken.KPublishAudioStream, expiredTs)
 	fmt.Println(builder.Token.Message)
+
 	builder.RemovePrivilege(AccessToken.KPublishAudioStream)
 	builder.RemovePrivilege(AccessToken.KPublishVideoStream)
 	builder.RemovePrivilege(AccessToken.KPublishDataStream)

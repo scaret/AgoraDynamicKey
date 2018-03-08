@@ -22,7 +22,15 @@ class SimpleTokenBuilderTest(unittest.TestCase):
         builder = SimpleTokenBuilder.SimpleTokenBuilder(appID, appCertificate, channelName, uid)
         builder.token.salt = salt
         builder.token.ts = ts
-        builder.token.messages[AccessToken.kJoinChannel] = expiredTs
+
+        builder.initPriviliges(SimpleTokenBuilder.Role_Attendee)
+
+        builder.setPrivilege(AccessToken.kJoinChannel, expiredTs)
+        builder.setPrivilege(AccessToken.kPublishAudioStream, expiredTs)
+
+        builder.removePrivilege(AccessToken.kPublishAudioStream)
+        builder.removePrivilege(AccessToken.kPublishVideoStream)
+        builder.removePrivilege(AccessToken.kPublishDataStream)
 
         result = builder.buildToken()
         self.assertEqual(expected, result)

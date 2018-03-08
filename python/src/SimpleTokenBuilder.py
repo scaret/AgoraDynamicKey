@@ -28,7 +28,7 @@ PublisherPrivileges = OrderedDict ([
 	(kPublishVideoCdn, 0),
 	(kInvitePublishAudioStream, 0),
 	(kInvitePublishVideoStream, 0),
-	(kAdministrateChannel, 0)
+	(kInvitePublishDataStream, 0)
 ])
 
 SubscriberPrivileges = OrderedDict ([

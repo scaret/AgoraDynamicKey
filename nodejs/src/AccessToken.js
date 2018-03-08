@@ -41,7 +41,7 @@ var AccessToken = function (appID, appCertificate, channelName, uid) {
     }
 
     this.addPriviledge = function (key, secondsFromNow) {
-        token.messages[key] = secondsFromNow
+        token.messages[key] = Math.floor(new Date()/1000) + secondsFromNow;
     };
 
 };
