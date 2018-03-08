@@ -138,7 +138,7 @@ public class AccessToken {
         return true;
     }
 
-    public class PrivilegeMessage implements Packable2 {
+    public class PrivilegeMessage implements PackableEx {
         public int salt;
         public int ts;
         public TreeMap<Short, Integer> messages;
@@ -150,19 +150,19 @@ public class AccessToken {
         }
 
         @Override
-        public ByteBuf marshall(ByteBuf out) {
+        public ByteBuf marshal(ByteBuf out) {
             return out.put(salt).put(ts).putTreeMap(messages);
         }
 
         @Override
-        public void unmrshall(ByteBuf in) {
+        public void unmarshal(ByteBuf in) {
             this.salt = in.readInt();
             this.ts = in.readInt();
             this.messages = in.readTreeMap();
         }
     }
 
-    public class PackContent implements Packable2 {
+    public class PackContent implements PackableEx {
         public byte[] signature;
         public byte[] crcChannelName;
         public byte[] crcUid;
@@ -179,12 +179,12 @@ public class AccessToken {
         }
 
         @Override
-        public ByteBuf marshall(ByteBuf out) {
+        public ByteBuf marshal(ByteBuf out) {
             return out.put(signature).put2(crcChannelName).put2(crcUid).put(rawMessage);
         }
 
         @Override
-        public void unmrshall(ByteBuf in) {
+        public void unmarshal(ByteBuf in) {
             this.signature = in.readBytes2();
             this.crcChannelName = in.readBytes3();
             this.crcUid = in.readBytes3();

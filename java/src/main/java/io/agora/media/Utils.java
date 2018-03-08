@@ -27,16 +27,16 @@ public class Utils {
         return mac.doFinal(msg);
     }
 
-    public static byte[] pack(Packable2 packable) {
+    public static byte[] pack(PackableEx packableEx) {
         ByteBuf buffer = new ByteBuf();
-        packable.marshall(buffer);
+        packableEx.marshal(buffer);
         return buffer.asBytes();
     }
 
-    public static void unpack(byte[] data, Packable2 packable) {
+    public static void unpack(byte[] data, PackableEx packableEx) {
         ByteBuf buffer = new ByteBuf();
         buffer.put(data);
-        packable.unmrshall(buffer);
+        packableEx.unmarshal(buffer);
     }
 
     public static String base64Encode(byte[] data) {

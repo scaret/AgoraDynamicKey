@@ -62,7 +62,7 @@ public class DynamicKey5 {
 
     private static byte[] pack(Packable content) {
         ByteBuf buffer = new ByteBuf();
-        content.marshall(buffer);
+        content.marshal(buffer);
         return buffer.asBytes();
     }
 
@@ -105,7 +105,7 @@ public class DynamicKey5 {
             this.extra = extra;
         }
 
-        public ByteBuf marshall(ByteBuf out) {
+        public ByteBuf marshal(ByteBuf out) {
             return out.put(serviceType).put(appID).put(unixTs).put(salt).put(channelName).put(uid).put(expiredTs).put(extra);
         }
     }
@@ -132,7 +132,7 @@ public class DynamicKey5 {
             this.extra = extra;
         }
 
-        public ByteBuf marshall(ByteBuf out) {
+        public ByteBuf marshal(ByteBuf out) {
             return out.put(serviceType).put(signature).put(appID).put(unixTs).put(salt).put(expiredTs).put(extra);
         }
 
