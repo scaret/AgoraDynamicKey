@@ -94,7 +94,7 @@ public class SimpleTokenBuilder {
         return true;
     }
 
-    public boolean initPriviliges(Role role) {
+    public boolean initPrivileges(Role role) {
         TreeMap<Short, Integer> value = gRolePrivileges.get(role.initValue);
         if (value == null) {
             return false;

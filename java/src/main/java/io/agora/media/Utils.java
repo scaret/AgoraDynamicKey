@@ -34,14 +34,18 @@ public class Utils {
     }
 
     public static void unpack(byte[] data, PackableEx packableEx) {
-        ByteBuf buffer = new ByteBuf();
-        buffer.put(data);
+        ByteBuf buffer = new ByteBuf(data);
         packableEx.unmarshal(buffer);
     }
 
     public static String base64Encode(byte[] data) {
         byte[] encodedBytes = Base64.getEncoder().encode(data);
         return new String(encodedBytes);
+    }
+
+    public static byte[] base64Decode(String data) {
+        byte[] decodedBytes = Base64.getDecoder().decode(data.getBytes());
+        return decodedBytes;
     }
 
     public static long crc32(String input) {

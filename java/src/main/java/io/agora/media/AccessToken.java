@@ -119,13 +119,13 @@ public class AccessToken {
     }
 
     public boolean fromString(String channelKeyString) {
-        if (channelKeyString.substring(0, Utils.VERSION_LENGTH) != getVersion()) {
+        if (!getVersion().equals(channelKeyString.substring(0, Utils.VERSION_LENGTH))) {
             return false;
         }
         try {
-            this.appId = channelKeyString.substring(Utils.VERSION_LENGTH, Utils.APP_ID_LENGTH);
+            this.appId = channelKeyString.substring(Utils.VERSION_LENGTH, Utils.VERSION_LENGTH + Utils.APP_ID_LENGTH);
             PackContent packContent = new PackContent();
-            Utils.unpack(channelKeyString.substring(Utils.VERSION_LENGTH + Utils.APP_ID_LENGTH, channelKeyString.length()).getBytes(), packContent);
+            Utils.unpack(Utils.base64Decode(channelKeyString.substring(Utils.VERSION_LENGTH + Utils.APP_ID_LENGTH, channelKeyString.length())), packContent);
             this.signature = packContent.signature;
             this.crcChannelNames2 = packContent.crcChannelName;
             this.crcUids2 = packContent.crcUid;
