@@ -69,13 +69,13 @@ public class AccessToken {
                 , channelName
                 , uid
                 , messageRawContent);
-        this.crcChannelName = crc32(this.channelName) & 0xffffffff;
+        this.crcChannelName = crc32(this.channelName) & 0xFFFFFFFFL;
         byte[] crcChannelNames = longToBytes(this.crcChannelName);
         this.crcChannelNames2 = new byte[4];
         for (int i = 0; i < 4; i++) {
             crcChannelNames2[i] = crcChannelNames[i];
         }
-        this.crcUid = crc32(this.uid) & 0xffffffff;
+        this.crcUid = crc32(this.uid) & 0xFFFFFFFFL;
         byte[] crcUids = longToBytes(this.crcUid);
         this.crcUids2 = new byte[4];
         for (int i = 0; i < 4; i++) {
@@ -185,10 +185,10 @@ public class AccessToken {
 
         @Override
         public void unmarshal(ByteBuf in) {
-            this.signature = in.readBytes2();
-            this.crcChannelName = in.readBytes3();
-            this.crcUid = in.readBytes3();
-            this.rawMessage = in.readBytes2();
+            this.signature = in.readBytes();
+            this.crcChannelName = in.readBytesCrc();
+            this.crcUid = in.readBytesCrc();
+            this.rawMessage = in.readBytes();
         }
     }
 }

@@ -95,14 +95,7 @@ public class ByteBuf {
         return bytes;
     }
 
-    public byte[] readBytes2() {
-        short length = readShort();
-        byte[] bytes = new byte[length];
-        buffer.get(bytes);
-        return bytes;
-    }
-
-    public byte[] readBytes3() {
+    public byte[] readBytesCrc() {
         byte[] bytes = new byte[4];
         buffer.get(bytes);
         return bytes;
