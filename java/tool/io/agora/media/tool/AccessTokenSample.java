@@ -16,7 +16,7 @@ public class AccessTokenSample {
 
     public void testGenerateDynamicKey() throws Exception {
         String expected = "006970CA35de60c44645bbae8a215061b33IACV0fZUBw+72cVoL9eyGGh3Q6Poi8bgjwVLnyKSJyOXR7dIfRBXoFHlEAABAAAAR/QQAAEAAQCvKDdW";
-        AccessToken token = new AccessToken(appId, appCertificate, channelName, uid, ts, salt);
+        AccessToken token = new AccessToken(appId, appCertificate, channelName, uid);
         token.addPrivilege(AccessToken.Privileges.kJoinChannel, expiredTs);
         String result = token.build();
         System.out.println(result);

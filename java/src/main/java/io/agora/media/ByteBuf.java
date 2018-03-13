@@ -37,11 +37,6 @@ public class ByteBuf {
         return this;
     }
 
-    public ByteBuf put2(byte[] v) {
-        buffer.put(v);
-        return this;
-    }
-
     // packUint32
     public ByteBuf put(int v) {
         buffer.putInt(v);
@@ -95,12 +90,6 @@ public class ByteBuf {
         return bytes;
     }
 
-    public byte[] readBytesCrc() {
-        byte[] bytes = new byte[4];
-        buffer.get(bytes);
-        return bytes;
-    }
-
     public String readString() {
         byte[] bytes = readBytes();
         return new String(bytes);
@@ -120,7 +109,7 @@ public class ByteBuf {
         return map;
     }
 
-    public TreeMap readTreeMap() {
+    public TreeMap<Short, Integer> readTreeMap() {
         TreeMap<Short, Integer> map = new TreeMap<>();
 
         short length = readShort();

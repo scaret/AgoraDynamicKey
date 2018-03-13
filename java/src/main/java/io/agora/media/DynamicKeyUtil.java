@@ -16,7 +16,7 @@ public class DynamicKeyUtil {
     }
 
     static byte[] encodeHMAC(byte[] key, byte[] message) throws NoSuchAlgorithmException, InvalidKeyException {
-        SecretKeySpec keySpec = new SecretKeySpec(key, "RAW");
+        SecretKeySpec keySpec = new SecretKeySpec(key, "HmacSHA1");
 
         Mac mac = Mac.getInstance("HmacSHA1");
         mac.init(keySpec);
