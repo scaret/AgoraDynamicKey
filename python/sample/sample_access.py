@@ -15,14 +15,10 @@ appCertificate = "5CFd2fd1755d40ecb72977518be15d3b"
 channelName = "7d72365eb983485397e3e3f9d460bdda"
 uid = "2882341273"
 expiredTs = 1446455471
-salt = 1
-ts = 1111111
 
 def main():
   
   key = AccessToken.AccessToken(appID, appCertificate, channelName, uid)
-  key.salt = salt
-  key.ts = ts
   key.messages[AccessToken.kJoinChannel] = expiredTs
   
   result = key.build()

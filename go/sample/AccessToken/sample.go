@@ -14,8 +14,6 @@ func main() {
 	expiredTs := uint32(1446455471)
 
 	token := AccessToken.CreateAccessToken(appID, appCertificate, channelName, uid)
-	token.Salt = uint32(1)
-	token.Ts = uint32(1111111)
 	token.Message[AccessToken.KJoinChannel] = expiredTs
 
 	if result, err := token.Build(); err != nil {
