@@ -15,7 +15,7 @@ func main() {
 	expiredTs := uint32(24 * 3600)
 
 	builder := SimpleTokenBuilder.CreateSimpleTokenBuilder(appID, appCertificate, channelName, uid)
-	builder.InitPriviliges(SimpleTokenBuilder.Role_Attendee)
+	builder.InitPrivileges(SimpleTokenBuilder.Role_Attendee)
 	builder.SetPrivilege(AccessToken.KJoinChannel, expiredTs)
 	builder.SetPrivilege(AccessToken.KPublishAudioStream, expiredTs)
 	builder.SetPrivilege(AccessToken.KPublishVideoStream, expiredTs)
