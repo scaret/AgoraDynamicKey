@@ -63,7 +63,7 @@ public class ByteBuf {
         return this;
     }
 
-    public ByteBuf putTreeMap(TreeMap<Short, Integer> extra) {
+    public ByteBuf putIntMap(TreeMap<Short, Integer> extra) {
         put((short)extra.size());
 
         for (Map.Entry<Short, Integer> pair : extra.entrySet()) {
@@ -109,7 +109,7 @@ public class ByteBuf {
         return map;
     }
 
-    public TreeMap<Short, Integer> readTreeMap() {
+    public TreeMap<Short, Integer> readIntMap() {
         TreeMap<Short, Integer> map = new TreeMap<>();
 
         short length = readShort();

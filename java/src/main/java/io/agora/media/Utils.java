@@ -54,7 +54,7 @@ public class Utils {
     }
 
     public static int getTimestamp() {
-        return (int)(new Date().getTime())/1000;
+        return (int)((new Date().getTime())/1000);
     }
 
     public static int randomInt() {

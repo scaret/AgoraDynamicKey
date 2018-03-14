@@ -44,6 +44,10 @@ public class AccessToken {
 
     public int expiredTs;
 
+    public AccessToken(String appId, String appCertificate, String channelName) {
+        this(appId, appCertificate, channelName, "");
+    }
+
     public AccessToken(String appId, String appCertificate, String channelName, String uid) {
         this.appId = appId;
         this.appCertificate = appCertificate;
@@ -138,14 +142,14 @@ public class AccessToken {
 
         @Override
         public ByteBuf marshal(ByteBuf out) {
-            return out.put(salt).put(ts).putTreeMap(messages);
+            return out.put(salt).put(ts).putIntMap(messages);
         }
 
         @Override
         public void unmarshal(ByteBuf in) {
             this.salt = in.readInt();
             this.ts = in.readInt();
-            this.messages = in.readTreeMap();
+            this.messages = in.readIntMap();
         }
     }
 
