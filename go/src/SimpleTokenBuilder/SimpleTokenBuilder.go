@@ -84,7 +84,7 @@ func (builder SimpleTokenBuilder) InitPriviliges(role Role) {
 
 func (builder SimpleTokenBuilder) SetPrivilege(privilege AccessToken.Privileges, timeoutFromNow uint32) {
 	pri := uint16(privilege)
-	builder.Token.Message[pri] = timeoutFromNow
+	builder.Token.Message[pri] = uint32(time.Now().Unix()) + timeoutFromNow
 }
 
 func (builder SimpleTokenBuilder) RemovePrivilege(privilege AccessToken.Privileges) {
