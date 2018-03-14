@@ -1,7 +1,5 @@
 package io.agora.media;
 
-import java.util.Date;
-import java.util.Random;
 import java.util.TreeMap;
 
 import static io.agora.media.AccessToken.Privileges.*;
@@ -84,9 +82,7 @@ public class SimpleTokenBuilder {
         this.appCertificate = appCertificate;
         this.channelName = channelName;
         this.uid = uid;
-        int ts = (int) (new Date().getTime() / 1000);
-        int salt = new Random().nextInt();
-        mTokenCreator = new AccessToken(appId, appCertificate, channelName, uid, ts, salt);
+        mTokenCreator = new AccessToken(appId, appCertificate, channelName, uid);
     }
 
     public boolean initTokenBuilder(String originToken) {
@@ -94,7 +90,7 @@ public class SimpleTokenBuilder {
         return true;
     }
 
-    public boolean initPriviliges(Role role) {
+    public boolean initPrivileges(Role role) {
         TreeMap<Short, Integer> value = gRolePrivileges.get(role.initValue);
         if (value == null) {
             return false;
@@ -111,7 +107,7 @@ public class SimpleTokenBuilder {
         mTokenCreator.message.messages.remove(privilege.intValue);
     }
 
-    public String buildToken() {
+    public String buildToken() throws Exception {
         return mTokenCreator.build();
     }
 }

@@ -5,6 +5,7 @@
  */
 var AccessToken = require('../src/AccessToken');
 var SimpleTokenBuilder = require('../src/SimpleTokenBuilder');
+var Role = require('../src/SimpleTokenBuilder').Role;
 var Priviledges = require('../src/AccessToken').priviledges;
 
 var appID = "970CA35de60c44645bbae8a215061b33";
@@ -34,8 +35,16 @@ exports.SimpleTokenBuilder_Test = function (test) {
   var builder = new SimpleTokenBuilder.SimpleTokenBuilder(appID, appCertificate, channel, uid);
   builder.key.salt = salt;
   builder.key.ts = ts;
-  builder.key.messages[Priviledges.kJoinChannel] = expiredTs;
-  
+
+  builder.initPriviliges(Role.kRoleAttendee);
+
+  builder.setPrivilege(Priviledges.kJoinChannel, expiredTs);
+  builder.setPrivilege(Priviledges.kPublishAudioStream, expiredTs);
+
+  builder.removePrivilege(Priviledges.kPublishAudioStream);
+  builder.removePrivilege(Priviledges.kPublishVideoStream);
+  builder.removePrivilege(Priviledges.kPublishDataStream);
+
   var actual = builder.buildToken();
   test.equal(expected, actual);
   test.done();

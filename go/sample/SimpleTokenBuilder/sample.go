@@ -16,12 +16,13 @@ func main() {
 
 	builder := SimpleTokenBuilder.CreateSimpleTokenBuilder(appID, appCertificate, channelName, uid)
 	
-	builder.Token.Message[AccessToken.KJoinChannel] = expiredTs
-	fmt.Println(builder.Token.Message)
 	builder.InitPriviliges(SimpleTokenBuilder.Role_Attendee)
 	fmt.Println(builder.Token.Message)
+
 	builder.SetPrivilege(AccessToken.KJoinChannel, expiredTs)
+	builder.SetPrivilege(AccessToken.KPublishAudioStream, expiredTs)
 	fmt.Println(builder.Token.Message)
+
 	builder.RemovePrivilege(AccessToken.KPublishAudioStream)
 	builder.RemovePrivilege(AccessToken.KPublishVideoStream)
 	builder.RemovePrivilege(AccessToken.KPublishDataStream)

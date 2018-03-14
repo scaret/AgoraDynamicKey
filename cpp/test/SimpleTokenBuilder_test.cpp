@@ -52,8 +52,7 @@ class SimpleTokenBuilder_test : public testing::Test {
   }
   void testSimpleTokenBuilderWithIntUid() {
     std::string expected =
-        "006970CA35de60c44645bbae8a215061b33FACV0fZUBw+"
-        "72cVoL9eyGGh3Q6Poi7dIfRBXoFHlEAABAAAAR/QQAAEAAQCvKDdW";
+        "006970CA35de60c44645bbae8a215061b33IACV0fZUBw+72cVoL9eyGGh3Q6Poi8bgjwVLnyKSJyOXR7dIfRBXoFHlEAABAAAAR/QQAAEAAQCvKDdW";
     SimpleTokenBuilder builder(appID, appCertificate, channelName, uid);
     builder.m_tokenCreator.message_.salt = 1;
     builder.m_tokenCreator.message_.ts = 1111111;
@@ -64,8 +63,7 @@ class SimpleTokenBuilder_test : public testing::Test {
 
   void testSimpleTokenBuilderWithStringUid() {
     std::string expected =
-        "006970CA35de60c44645bbae8a215061b33FACV0fZUBw+"
-        "72cVoL9eyGGh3Q6Poi7dIfRBXoFHlEAABAAAAR/QQAAEAAQCvKDdW";
+        "006970CA35de60c44645bbae8a215061b33IACV0fZUBw+72cVoL9eyGGh3Q6Poi8bgjwVLnyKSJyOXR7dIfRBXoFHlEAABAAAAR/QQAAEAAQCvKDdW";
     SimpleTokenBuilder builder(
             appID, appCertificate, channelName, uidStr);
     // builder.m_tokenCreator.AddPrivilege(AccessToken::Privileges::kJoinChannel, expiredTs);

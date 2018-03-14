@@ -6,7 +6,7 @@
 #include <map>
 #include <string>
 #include <utility>
-#include "AgoraDynamicKey/cpp/src/AccessToken.h"
+#include "cpp/src/AccessToken.h"
 
 namespace agora {
     namespace tools {

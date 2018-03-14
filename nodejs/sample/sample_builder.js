@@ -12,15 +12,18 @@ var expiredTs = 1446455471;
 var builder = new SimpleTokenBuilder(appID, appCertificate, channel, uid);
 builder.key.salt = salt;
 builder.key.ts = ts;
-builder.key.messages[Priviledges.kJoinChannel] = expiredTs;
 
-// console.log(builder.key.messages);
-// builder.initPriviliges(Role.kRoleAttendee);
-// console.log(builder.key.messages);
-// builder.setPrivilege(Priviledges.kJoinChannel, expiredTs);
-// console.log(builder.key.messages);
-// builder.removePrivilege(Priviledges.kJoinChannel);
-// console.log(builder.key.messages);
+builder.initPriviliges(Role.kRoleAttendee);
+console.log(builder.key.messages);
+
+builder.setPrivilege(Priviledges.kJoinChannel, expiredTs);
+builder.setPrivilege(Priviledges.kPublishAudioStream, expiredTs);
+console.log(builder.key.messages);
+
+builder.removePrivilege(Priviledges.kPublishAudioStream);
+builder.removePrivilege(Priviledges.kPublishVideoStream);
+builder.removePrivilege(Priviledges.kPublishDataStream);
+console.log(builder.key.messages);
 
 var token = builder.buildToken();
 console.log(token);
