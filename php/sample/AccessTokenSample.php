@@ -12,7 +12,7 @@ $expiredTs = 1446455471;
 
 
 $builder = new AccessToken($appID, $appCertificate, $channelName, $uid);
-$builder->setPriviledge($Privileges["kJoinChannel"], $expiredTs);
+$builder->addPrivilege($Privileges["kJoinChannel"], $expiredTs);
 $builder->salt = $randomInt;
 $builder->ts = $ts;
 echo $builder->build();
