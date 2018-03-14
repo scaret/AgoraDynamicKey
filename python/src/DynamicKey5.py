@@ -166,7 +166,7 @@ def generateSignature(
     content = packUint16(servicetype) \
         + packString(appID.decode('hex'))\
         + packUint32(unixTs)  \
-        + packInt32(randomInt)  \
+        + packUint32(randomInt)  \
         + packString(channelName) \
         + packUint32(uid)\
         + packUint32(expiredTs)\
