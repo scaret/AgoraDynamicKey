@@ -16,14 +16,10 @@ appCertificate = "5CFd2fd1755d40ecb72977518be15d3b"
 channelName = "7d72365eb983485397e3e3f9d460bdda"
 uid = "2882341273"
 expiredTs = 1446455471
-salt = 1
-ts = 1111111
 
 def main():
   
   builder = SimpleTokenBuilder.SimpleTokenBuilder(appID, appCertificate, channelName, uid)
-  builder.token.salt = salt
-  builder.token.ts = ts
   builder.token.messages[AccessToken.kJoinChannel] = expiredTs
 
   '''
