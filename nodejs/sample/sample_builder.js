@@ -5,25 +5,15 @@ var appID  = "970CA35de60c44645bbae8a215061b33";
 var appCertificate     = "5CFd2fd1755d40ecb72977518be15d3b";
 var channel = "7d72365eb983485397e3e3f9d460bdda";
 var uid = 2882341273;
-var salt = 1;
-var ts = 1111111;
-var expiredTs = 1446455471;
+var expiredTs = 24 * 3600;
 
 var builder = new SimpleTokenBuilder(appID, appCertificate, channel, uid);
-builder.key.salt = salt;
-builder.key.ts = ts;
 
-builder.initPriviliges(Role.kRoleAttendee);
-console.log(builder.key.messages);
-
+builder.initPrivileges(Role.kRoleAttendee);
 builder.setPrivilege(Priviledges.kJoinChannel, expiredTs);
 builder.setPrivilege(Priviledges.kPublishAudioStream, expiredTs);
-console.log(builder.key.messages);
-
-builder.removePrivilege(Priviledges.kPublishAudioStream);
-builder.removePrivilege(Priviledges.kPublishVideoStream);
-builder.removePrivilege(Priviledges.kPublishDataStream);
-console.log(builder.key.messages);
+builder.setPrivilege(Priviledges.kPublishVideoStream, expiredTs);
+builder.setPrivilege(Priviledges.kPublishDataStream, expiredTs);
 
 var token = builder.buildToken();
 console.log(token);
