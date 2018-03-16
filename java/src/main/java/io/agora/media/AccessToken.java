@@ -57,7 +57,7 @@ public class AccessToken {
         this.crcChannelName = 0;
         this.crcUid = 0;
 
-        this.message = new PrivilegeMessage(Utils.randomInt(), Utils.getTimestamp() + 24 * 3600);
+        this.message = new PrivilegeMessage();
     }
 
     public String build() throws Exception {
@@ -134,10 +134,10 @@ public class AccessToken {
         public int ts;
         public TreeMap<Short, Integer> messages;
 
-        public PrivilegeMessage(int salt, int ts) {
-            this.salt = salt;
-            this.ts = ts;
-            this.messages = new TreeMap<Short, Integer>();
+        public PrivilegeMessage() {
+            this.salt = Utils.randomInt();
+            this.ts = Utils.getTimestamp() + 24 * 3600;
+            this.messages = new TreeMap<>();
         }
 
         @Override

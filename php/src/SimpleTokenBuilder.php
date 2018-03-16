@@ -22,7 +22,7 @@ $publisherPrivileges = array(
     $Privileges["kPublishAudioStream"] => 0,
     $Privileges["kPublishVideoStream"] => 0,
     $Privileges["kPublishDataStream"] => 0,
-    $Privileges["kPublishAudiocdn"] => 0,
+    $Privileges["kPublishAudioCdn"] => 0,
     $Privileges["kPublishVideoCdn"] => 0,
     $Privileges["kInvitePublishAudioStream"] => 0,
     $Privileges["kInvitePublishVideoStream"] => 0,
@@ -59,17 +59,17 @@ class SimpleTokenBuilder
     public function __construct($appID, $appCertificate, $channelName, $uid){
         $this->token = new AccessToken($appID, $appCertificate, $channelName, $uid);
     }
-    public function initPriviledge($role){
+    public function initPrivilege($role){
         $p = $RolePrivileges[$role];
         foreach($p as $key => $value){
-            $this->setPriviledge($key, $value);
+            $this->setPrivilege($key, $value);
         }
     }
-    public function setPriviledge($privilege, $ts){
-        $this->token->setPriviledge($privilege, $ts);
+    public function setPrivilege($privilege, $ts){
+        $this->token->addPrivilege($privilege, $ts);
     }
-    public function removePriviledge($privilege){
-        $this->token->removePriviledge($privilege);
+    public function removePrivilege($privilege){
+        unset($this->token->message->privileges[$privilege]);
     }
     public function buildToken(){
         return $this->token->build();
