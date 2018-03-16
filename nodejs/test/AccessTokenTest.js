@@ -35,15 +35,7 @@ exports.SimpleTokenBuilder_Test = function (test) {
   var builder = new SimpleTokenBuilder.SimpleTokenBuilder(appID, appCertificate, channel, uid);
   builder.key.salt = salt;
   builder.key.ts = ts;
-
-  builder.initPriviliges(Role.kRoleAttendee);
-
-  builder.setPrivilege(Priviledges.kJoinChannel, expiredTs);
-  builder.setPrivilege(Priviledges.kPublishAudioStream, expiredTs);
-
-  builder.removePrivilege(Priviledges.kPublishAudioStream);
-  builder.removePrivilege(Priviledges.kPublishVideoStream);
-  builder.removePrivilege(Priviledges.kPublishDataStream);
+  builder.key.messages[Priviledges.kJoinChannel] = expiredTs;
 
   var actual = builder.buildToken();
   test.equal(expected, actual);

@@ -19,15 +19,7 @@ func Test_SimpleTokenBuilder(t *testing.T) {
 	builder := SimpleTokenBuilder.CreateSimpleTokenBuilder(appID, appCertificate, channelName, uid)
 	builder.Token.Salt = uint32(1)
 	builder.Token.Ts = uint32(1111111)
-
-	builder.InitPriviliges(SimpleTokenBuilder.Role_Attendee)
-
-	builder.SetPrivilege(AccessToken.KJoinChannel, expiredTs)
-	builder.SetPrivilege(AccessToken.KPublishAudioStream, expiredTs)
-
-	builder.RemovePrivilege(AccessToken.KPublishAudioStream)
-	builder.RemovePrivilege(AccessToken.KPublishVideoStream)
-	builder.RemovePrivilege(AccessToken.KPublishDataStream)
+	builder.Token.Message[AccessToken.KJoinChannel] = expiredTs
 
 	if result, err := builder.BuildToken(); err != nil {
 		t.Error(err)

@@ -28,7 +28,7 @@ namespace agora {
                                const std::string& channelName, const std::string& uid = "");
 
             bool initTokenBuilder(const std::string& originToken);
-            bool initPriviliges(Role role);
+            bool initPrivileges(Role role);
             void setPrivilege(AccessToken::Privileges privilege, uint32_t timeoutFromNow = 0);
             void removePrivilege(AccessToken::Privileges privilege);
             std::string buildToken();
@@ -63,7 +63,7 @@ namespace agora {
         {
         }
 
-        bool SimpleTokenBuilder::initPriviliges(Role role)
+        bool SimpleTokenBuilder::initPrivileges(Role role)
         {
             auto it = g_rolePrivileges.find(role);
             if (it == g_rolePrivileges.end()) {
@@ -82,7 +82,7 @@ namespace agora {
 
         void SimpleTokenBuilder::setPrivilege(AccessToken::Privileges privilege, uint32_t timeoutFromNow)
         {
-            m_tokenCreator.message_.messages[privilege] = timeoutFromNow;
+            m_tokenCreator.message_.messages[privilege] = time(NULL) + timeoutFromNow;
         }
 
         void SimpleTokenBuilder::removePrivilege(AccessToken::Privileges privilege)

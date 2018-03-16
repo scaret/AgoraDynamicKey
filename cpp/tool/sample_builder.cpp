@@ -13,13 +13,15 @@ int main(int argc, char const *argv[]) {
   std::string  appCertificate = "5CFd2fd1755d40ecb72977518be15d3b";
   std::string channelName= "7d72365eb983485397e3e3f9d460bdda";
   uint32_t uid = 2882341273;
-  uint32_t expiredTs = 1446455471;
+  uint32_t expiredTs = 24 * 3600;
 
   SimpleTokenBuilder builder(appID, appCertificate, channelName, uid);
-  builder.m_tokenCreator.message_.salt = 1;
-  builder.m_tokenCreator.message_.ts = 1111111;
-  builder.m_tokenCreator.message_.messages[AccessToken::Privileges::kJoinChannel] = expiredTs;
-
+  builder.initPrivileges(Role::Role_Attendee);
+  builder.setPrivilege(AccessToken::Privileges::kJoinChannel, expiredTs);
+  builder.setPrivilege(AccessToken::Privileges::kPublishAudioStream, expiredTs);
+  builder.setPrivilege(AccessToken::Privileges::kPublishVideoStream, expiredTs);
+  builder.setPrivilege(AccessToken::Privileges::kPublishDataStream, expiredTs);
+  
   std::string result = builder.buildToken();
   std::cout << result << std::endl;
 
