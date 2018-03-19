@@ -21,6 +21,11 @@ Languages not available for now.
 * Java
 * PHP
 
+### **YOUR IMPLIMENTATION ARE VERY WELCOME.**
+
+If you implement our algorithm in other languages, please kindly send us a pull request for review. If your implementation is correct and with test cases, we are very happy to merge it. Thank you very much!
+
+
 ## Dynamic Key
 
 For joining media channel, use generateMediaChannelKey.

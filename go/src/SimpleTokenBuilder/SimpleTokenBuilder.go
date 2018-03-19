@@ -74,9 +74,9 @@ func CreateSimpleTokenBuilder(appID, appCertificate, channelName string, uid uin
     return SimpleTokenBuilder{token}
 }
 
-func (builder SimpleTokenBuilder) InitPriviliges(role Role) {
+func (builder SimpleTokenBuilder) InitPrivileges(role Role) {
 	rolepri := uint16(role)
-	builder.Token.Message = make(map[uint16]uint32)
+	//builder.Token.Message = make(map[uint16]uint32)
 	for key, value := range RolePrivileges[rolepri] {
 		builder.Token.Message[key] = value
 	}
@@ -84,7 +84,7 @@ func (builder SimpleTokenBuilder) InitPriviliges(role Role) {
 
 func (builder SimpleTokenBuilder) SetPrivilege(privilege AccessToken.Privileges, timeoutFromNow uint32) {
 	pri := uint16(privilege)
-	builder.Token.Message[pri] = timeoutFromNow
+	builder.Token.Message[pri] = uint32(time.Now().Unix()) + timeoutFromNow
 }
 
 func (builder SimpleTokenBuilder) RemovePrivilege(privilege AccessToken.Privileges) {

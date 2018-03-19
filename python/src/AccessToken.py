@@ -6,6 +6,7 @@ import struct
 from zlib import crc32
 import random
 import time
+from collections import OrderedDict
 
 kJoinChannel = 1
 kPublishAudioStream = 2
@@ -68,6 +69,9 @@ class AccessToken:
         self.messages[key] = int(time.time()) + secondsFromNow
 
     def build(self):
+
+        self.messages = OrderedDict(sorted(self.messages.iteritems(), key=lambda x: int(x[0])))
+
         m = packUint32(self.salt)  + packUint32(self.ts) \
              + packMapUint32(self.messages)
 

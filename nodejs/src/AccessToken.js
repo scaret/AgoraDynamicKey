@@ -12,7 +12,7 @@ var AccessToken = function (appID, appCertificate, channelName, uid) {
     this.uid = `${uid}`;
     this.messages = {};
     this.salt = randomInt;
-    this.ts = new Date().getTime() / 1000 + 24 * 3600;
+    this.ts = Math.floor(new Date() / 1000) + (24 * 3600);
 
 
     this.build = function () {
@@ -41,7 +41,7 @@ var AccessToken = function (appID, appCertificate, channelName, uid) {
     }
 
     this.addPriviledge = function (key, secondsFromNow) {
-        token.messages[key] = secondsFromNow
+        token.messages[key] = Math.floor(new Date() / 1000) + secondsFromNow;
     };
 
 };

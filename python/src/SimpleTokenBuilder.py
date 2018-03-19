@@ -28,7 +28,7 @@ PublisherPrivileges = OrderedDict ([
 	(kPublishVideoCdn, 0),
 	(kInvitePublishAudioStream, 0),
 	(kInvitePublishVideoStream, 0),
-	(kAdministrateChannel, 0)
+	(kInvitePublishDataStream, 0)
 ])
 
 SubscriberPrivileges = OrderedDict ([
@@ -62,11 +62,11 @@ class SimpleTokenBuilder:
         self.token.salt = random.randint(1, 99999999)
         self.token.messages = {}
 
-    def initPriviliges(self, role) :
+    def initPrivileges(self, role) :
 	    self.token.messages = RolePrivileges[role]
 
     def setPrivilege(self, privilege, timeoutFromNow) :
-	    self.token.messages[privilege] = timeoutFromNow
+	    self.token.messages[privilege] = int(time.time()) + timeoutFromNow
 
     def removePrivilege(self, privilege) :
 	    self.token.messages.pop(privilege)

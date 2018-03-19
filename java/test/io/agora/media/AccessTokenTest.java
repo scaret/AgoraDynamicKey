@@ -16,9 +16,23 @@ public class AccessTokenTest {
     @Test
     public void testGenerateDynamicKey() throws Exception {
         String expected = "006970CA35de60c44645bbae8a215061b33IACV0fZUBw+72cVoL9eyGGh3Q6Poi8bgjwVLnyKSJyOXR7dIfRBXoFHlEAABAAAAR/QQAAEAAQCvKDdW";
-        AccessToken token = new AccessToken(appId, appCertificate, channelName, uid, ts, salt);
+        AccessToken token = new AccessToken(appId, appCertificate, channelName, uid);
+        token.message.ts = ts;
+        token.message.salt = salt;
         token.addPrivilege(AccessToken.Privileges.kJoinChannel, expiredTs);
         String result = token.build();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testAccessTokenWithIntUid() throws Exception {
+        String expected =
+                "006970CA35de60c44645bbae8a215061b33IACV0fZUBw+72cVoL9eyGGh3Q6Poi8bgjwVLnyKSJyOXR7dIfRBXoFHlEAABAAAAR/QQAAEAAQCvKDdW";
+        AccessToken key = new AccessToken(appId, appCertificate, channelName, uid);
+        key.message.salt = salt;
+        key.message.ts = ts;
+        key.message.messages.put((short)AccessToken.Privileges.kJoinChannel.intValue, expiredTs);
+        String result = key.build();
         assertEquals(expected, result);
     }
 }

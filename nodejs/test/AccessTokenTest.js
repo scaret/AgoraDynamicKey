@@ -5,6 +5,7 @@
  */
 var AccessToken = require('../src/AccessToken');
 var SimpleTokenBuilder = require('../src/SimpleTokenBuilder');
+var Role = require('../src/SimpleTokenBuilder').Role;
 var Priviledges = require('../src/AccessToken').priviledges;
 
 var appID = "970CA35de60c44645bbae8a215061b33";
@@ -35,7 +36,7 @@ exports.SimpleTokenBuilder_Test = function (test) {
   builder.key.salt = salt;
   builder.key.ts = ts;
   builder.key.messages[Priviledges.kJoinChannel] = expiredTs;
-  
+
   var actual = builder.buildToken();
   test.equal(expected, actual);
   test.done();

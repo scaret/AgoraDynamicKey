@@ -23,7 +23,7 @@ class SimpleTokenBuilderTest(unittest.TestCase):
         builder.token.salt = salt
         builder.token.ts = ts
         builder.token.messages[AccessToken.kJoinChannel] = expiredTs
-
+        
         result = builder.buildToken()
         self.assertEqual(expected, result)
 

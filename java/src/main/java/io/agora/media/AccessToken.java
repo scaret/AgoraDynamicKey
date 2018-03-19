@@ -2,8 +2,6 @@ package io.agora.media;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.TreeMap;
 
 import static io.agora.media.Utils.crc32;
@@ -40,57 +38,50 @@ public class AccessToken {
     public String uid;
     public byte[] signature;
     public byte[] messageRawContent;
-    public long crcChannelName;
-    public byte[] crcChannelNames2;
-    public long crcUid;
-    public byte[] crcUids2;
+    public int crcChannelName;
+    public int crcUid;
     public PrivilegeMessage message;
 
     public int expiredTs;
 
-    public AccessToken(String appId, String appCertificate, String channelName, String uid, int ts, int salt) {
+    public AccessToken(String appId, String appCertificate, String channelName) {
+        this(appId, appCertificate, channelName, "");
+    }
+
+    public AccessToken(String appId, String appCertificate, String channelName, String uid) {
         this.appId = appId;
         this.appCertificate = appCertificate;
         this.channelName = channelName;
         this.uid = uid;
+
         this.crcChannelName = 0;
         this.crcUid = 0;
-        if (this.message == null) {
-            this.message = new PrivilegeMessage(salt, ts, new TreeMap<Short, Integer>());
-        }
-        this.message.salt = salt;
-        this.message.ts = ts;
+
+        this.message = new PrivilegeMessage();
     }
 
-    public String build() {
+    public String build() throws Exception {
+        if (! Utils.isUUID(this.appId)) {
+            return "";
+        }
+
+        if (! Utils.isUUID(this.appCertificate)) {
+            return "";
+        }
+
         this.messageRawContent = Utils.pack(this.message);
         this.signature = generateSignature(appCertificate
                 , appId
                 , channelName
                 , uid
                 , messageRawContent);
-        this.crcChannelName = crc32(this.channelName) & 0xffffffff;
-        byte[] crcChannelNames = longToBytes(this.crcChannelName);
-        this.crcChannelNames2 = new byte[4];
-        for (int i = 0; i < 4; i++) {
-            crcChannelNames2[i] = crcChannelNames[i];
-        }
-        this.crcUid = crc32(this.uid) & 0xffffffff;
-        byte[] crcUids = longToBytes(this.crcUid);
-        this.crcUids2 = new byte[4];
-        for (int i = 0; i < 4; i++) {
-            crcUids2[i] = crcUids[i];
-        }
-        PackContent packContent = new PackContent(signature, crcChannelNames2, crcUids2, this.messageRawContent);
-        byte[] content = Utils.pack(packContent);
-        String result = getVersion() + this.appId + Utils.base64Encode(content);
-        return result;
-    }
 
-    public byte[] longToBytes(long x) {
-        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES).order(ByteOrder.LITTLE_ENDIAN);
-        buffer.putLong(x);
-        return buffer.array();
+        this.crcChannelName = crc32(this.channelName);
+        this.crcUid = crc32(this.uid);
+
+        PackContent packContent = new PackContent(signature, crcChannelName, crcUid, this.messageRawContent);
+        byte[] content = Utils.pack(packContent);
+        return getVersion() + this.appId + Utils.base64Encode(content);
     }
 
     public void addPrivilege(Privileges privilege, int timeoutFromNow) {
@@ -105,7 +96,7 @@ public class AccessToken {
             , String appID
             , String channelName
             , String uid
-            , byte[] message) {
+            , byte[] message) throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             baos.write(appID.getBytes());
@@ -118,17 +109,17 @@ public class AccessToken {
         return Utils.hmacSign(appCertificate, baos.toByteArray());
     }
 
-    public boolean fromString(String channelKeyString) {
-        if (channelKeyString.substring(0, Utils.VERSION_LENGTH) != getVersion()) {
+    public boolean fromString(String token) {
+        if (!getVersion().equals(token.substring(0, Utils.VERSION_LENGTH))) {
             return false;
         }
         try {
-            this.appId = channelKeyString.substring(Utils.VERSION_LENGTH, Utils.APP_ID_LENGTH);
+            this.appId = token.substring(Utils.VERSION_LENGTH, Utils.VERSION_LENGTH + Utils.APP_ID_LENGTH);
             PackContent packContent = new PackContent();
-            Utils.unpack(channelKeyString.substring(Utils.VERSION_LENGTH + Utils.APP_ID_LENGTH, channelKeyString.length()).getBytes(), packContent);
+            Utils.unpack(Utils.base64Decode(token.substring(Utils.VERSION_LENGTH + Utils.APP_ID_LENGTH, token.length())), packContent);
             this.signature = packContent.signature;
-            this.crcChannelNames2 = packContent.crcChannelName;
-            this.crcUids2 = packContent.crcUid;
+            this.crcChannelName = packContent.crcChannelName;
+            this.crcUid = packContent.crcUid;
             this.messageRawContent = packContent.rawMessage;
             Utils.unpack(this.messageRawContent, this.message);
         } catch (Exception e) {
@@ -138,40 +129,40 @@ public class AccessToken {
         return true;
     }
 
-    public class PrivilegeMessage implements Packable2 {
+    public class PrivilegeMessage implements PackableEx {
         public int salt;
         public int ts;
         public TreeMap<Short, Integer> messages;
 
-        public PrivilegeMessage(int salt, int ts, TreeMap<Short, Integer> messages) {
-            this.salt = salt;
-            this.ts = ts;
-            this.messages = messages;
+        public PrivilegeMessage() {
+            this.salt = Utils.randomInt();
+            this.ts = Utils.getTimestamp() + 24 * 3600;
+            this.messages = new TreeMap<>();
         }
 
         @Override
-        public ByteBuf marshall(ByteBuf out) {
-            return out.put(salt).put(ts).putTreeMap(messages);
+        public ByteBuf marshal(ByteBuf out) {
+            return out.put(salt).put(ts).putIntMap(messages);
         }
 
         @Override
-        public void unmrshall(ByteBuf in) {
+        public void unmarshal(ByteBuf in) {
             this.salt = in.readInt();
             this.ts = in.readInt();
-            this.messages = in.readTreeMap();
+            this.messages = in.readIntMap();
         }
     }
 
-    public class PackContent implements Packable2 {
+    public class PackContent implements PackableEx {
         public byte[] signature;
-        public byte[] crcChannelName;
-        public byte[] crcUid;
+        public int crcChannelName;
+        public int crcUid;
         public byte[] rawMessage;
 
         public PackContent() {
         }
 
-        public PackContent(byte[] signature, byte[] crcChannelName, byte[] crcUid, byte[] rawMessage) {
+        public PackContent(byte[] signature, int crcChannelName, int crcUid, byte[] rawMessage) {
             this.signature = signature;
             this.crcChannelName = crcChannelName;
             this.crcUid = crcUid;
@@ -179,16 +170,16 @@ public class AccessToken {
         }
 
         @Override
-        public ByteBuf marshall(ByteBuf out) {
-            return out.put(signature).put2(crcChannelName).put2(crcUid).put(rawMessage);
+        public ByteBuf marshal(ByteBuf out) {
+            return out.put(signature).put(crcChannelName).put(crcUid).put(rawMessage);
         }
 
         @Override
-        public void unmrshall(ByteBuf in) {
-            this.signature = in.readBytes2();
-            this.crcChannelName = in.readBytes3();
-            this.crcUid = in.readBytes3();
-            this.rawMessage = in.readBytes2();
+        public void unmarshal(ByteBuf in) {
+            this.signature = in.readBytes();
+            this.crcChannelName = in.readInt();
+            this.crcUid = in.readInt();
+            this.rawMessage = in.readBytes();
         }
     }
 }

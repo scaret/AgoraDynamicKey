@@ -53,24 +53,24 @@ var RolePrivileges = {
 
 var SimpleTokenBuilder = function (appID, appCertificate, channelName, uid) {
     let builder = this;
-    this.key = new AccessToken(appID, appCertificate, channelName, uid)
+    this.key = new AccessToken(appID, appCertificate, channelName, uid);
     this.key.salt = randomInt;
-    this.key.ts = new Date().getTime() / 1000 + 24 * 3600;
+    this.key.ts = Math.floor(new Date() / 1000) + (24 * 3600);
     this.key.messages = {};
 
     this.buildToken = function () {
-        return builder.key.build()
+        return builder.key.build();
     }
 
-    this.initPriviliges = function (role) {
+    this.initPrivileges = function (role) {
         let rolePri = RolePrivileges[role];
         builder.key.messages = JSON.parse(JSON.stringify(rolePri));
     }
     this.setPrivilege = function (privilege, timeoutFromNow) {
-        builder.key.messages[privilege] = timeoutFromNow
+        builder.key.messages[privilege] = Math.floor(new Date() / 1000) + timeoutFromNow;
     }
     this.removePrivilege = function (privilege) {
-        delete builder.key.messages[privilege]
+        delete builder.key.messages[privilege];
     }
 };
 

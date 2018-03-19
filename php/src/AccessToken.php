@@ -6,7 +6,7 @@ $Privileges = array(
     "kPublishAudioStream" => 2,
     "kPublishVideoStream" => 3,
     "kPublishDataStream" => 4,
-    "kPublishAudiocdn" => 5,
+    "kPublishAudioCdn" => 5,
     "kPublishVideoCdn" => 6,
     "kRequestPublishAudioStream" => 7,
     "kRequestPublishVideoStream" => 8,
@@ -19,24 +19,28 @@ $Privileges = array(
 
 class Message
 {
-    private $salt;
-    private $ts;
-    private $msgs;
-    public function __construct($salt, $ts, $msgs)
+    public $salt;
+    public $ts;
+    public $privileges;
+    public function __construct()
     {
-        $this->salt = $salt;
-        $this->ts = $ts;
-        $this->msgs = $msgs;
+        $this->salt = rand(0, 100000);
+
+        date_default_timezone_set("UTC");
+        $date = new DateTime();
+        $this->ts = $date->getTimestamp() + 24 * 3600;
+
+        $this->privileges = array();
     }
 
     public function packContent()
     {
-        $buffer = unpack("C*", pack("I", $this->salt));
-        $buffer = array_merge($buffer, unpack("C*", pack("I", $this->ts)));
-        $buffer = array_merge($buffer, unpack("C*", pack("S", sizeof($this->msgs))));
-        foreach ($this->msgs as $key => $value) {
-            $buffer = array_merge($buffer, unpack("C*", pack("S", $key)));
-            $buffer = array_merge($buffer, unpack("C*", pack("I", $value)));
+        $buffer = unpack("C*", pack("V", $this->salt));
+        $buffer = array_merge($buffer, unpack("C*", pack("V", $this->ts)));
+        $buffer = array_merge($buffer, unpack("C*", pack("v", sizeof($this->privileges))));
+        foreach ($this->privileges as $key => $value) {
+            $buffer = array_merge($buffer, unpack("C*", pack("v", $key)));
+            $buffer = array_merge($buffer, unpack("C*", pack("V", $value)));
         }
         return $buffer;
     }
@@ -44,44 +48,35 @@ class Message
 
 class AccessToken
 {
-    private $msgs;
-    private $appID, $appCertificate, $channelName, $uid;
-    public $ts, $salt;
+    public $appID, $appCertificate, $channelName, $uid;
+    public $message;
+
     public function __construct($appID, $appCertificate, $channelName, $uid)
     {
         $this->appID = $appID;
         $this->appCertificate = $appCertificate;
         $this->channelName = $channelName;
         $this->uid = $uid;
-        date_default_timezone_set("UTC");
-        $date = new DateTime();
-        $this->ts = $date->getTimestamp() + 24 * 3600;
-        $this->salt = rand(0, 100000);
-        $this->msgs = array();
+
+        $this->message = new Message();
     }
 
-    public function setPriviledge($key, $seconds)
+    public function addPrivilege($key, $seconds)
     {
-        $this->msgs[$key] = $seconds;
-        return $this;
-    }
-
-    public function removePriviledge($key, $seconds)
-    {
-        unset($this->msgs[$key]);
+        $this->message->privileges[$key] = $seconds;
         return $this;
     }
 
     public function build()
     {
-        $msg = (new Message($this->salt, $this->ts, $this->msgs))->packContent();
+        $msg = $this->message->packContent();
         $val = array_merge(unpack("C*", $this->appID), unpack("C*", $this->channelName), unpack("C*", $this->uid), $msg);
         $sig = hash_hmac('sha256', implode(array_map("chr", $val)), $this->appCertificate, true);
 
         $crc_channel_name = crc32($this->channelName) & 0xffffffff;
         $crc_uid = crc32($this->uid) & 0xffffffff;
 
-        $content = array_merge(unpack("C*", packString($sig)), unpack("C*", pack("I", $crc_channel_name)), unpack("C*", pack("I", $crc_uid)), unpack("C*", pack("S", count($msg))), $msg);
+        $content = array_merge(unpack("C*", packString($sig)), unpack("C*", pack("V", $crc_channel_name)), unpack("C*", pack("V", $crc_uid)), unpack("C*", pack("v", count($msg))), $msg);
         $version = "006";
         $ret = $version . $this->appID . base64_encode(implode(array_map("chr", $content)));
         return $ret;
@@ -90,5 +85,5 @@ class AccessToken
 
 function packString($value)
 {
-    return pack("S", strlen($value)) . $value;
+    return pack("v", strlen($value)) . $value;
 }
