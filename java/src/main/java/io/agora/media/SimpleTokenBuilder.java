@@ -99,8 +99,8 @@ public class SimpleTokenBuilder {
         return true;
     }
 
-    public void setPrivilege(AccessToken.Privileges privilege, int timeoutFromNow) {
-        mTokenCreator.message.messages.put(privilege.intValue, timeoutFromNow);
+    public void setPrivilege(AccessToken.Privileges privilege, int expireTimestamp) {
+        mTokenCreator.message.messages.put(privilege.intValue, expireTimestamp);
     }
 
     public void removePrivilege(AccessToken.Privileges privilege) {

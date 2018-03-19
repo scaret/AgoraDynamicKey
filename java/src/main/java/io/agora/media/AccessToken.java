@@ -42,7 +42,7 @@ public class AccessToken {
     public int crcUid;
     public PrivilegeMessage message;
 
-    public int expiredTs;
+    public int expireTimestamp;
 
     public AccessToken(String appId, String appCertificate, String channelName) {
         this(appId, appCertificate, channelName, "");
@@ -84,8 +84,8 @@ public class AccessToken {
         return getVersion() + this.appId + Utils.base64Encode(content);
     }
 
-    public void addPrivilege(Privileges privilege, int timeoutFromNow) {
-        message.messages.put(privilege.intValue, timeoutFromNow);
+    public void addPrivilege(Privileges privilege, int expireTimestamp) {
+        message.messages.put(privilege.intValue, expireTimestamp);
     }
 
     public static String getVersion() {

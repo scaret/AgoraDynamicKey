@@ -1,4 +1,4 @@
-package io.agora.media.tool;
+package io.agora.media.sample;
 
 import io.agora.media.DynamicKey4;
 

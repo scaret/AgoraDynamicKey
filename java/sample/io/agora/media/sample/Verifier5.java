@@ -1,4 +1,4 @@
-package io.agora.media.tool;
+package io.agora.media.sample;
 
 import io.agora.media.DynamicKey5;
 import org.apache.commons.codec.binary.Hex;
@@ -12,7 +12,7 @@ import java.util.TreeMap;
 public class Verifier5 {
     public static void main(String[] args) throws Exception {
         if (args.length < 5) {
-            System.out.println("java io.agora.media.tool.Verifier5 appID appCertificate channelName uid channelKey");
+            System.out.println("java io.agora.media.sample.Verifier5 appID appCertificate channelName uid channelKey");
             return;
         }
 
