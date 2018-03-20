@@ -87,10 +87,6 @@ int main(int argc, char const *argv[]) {
 
   std::cout << std::endl;
   std::cout << DynamicKey5::generateMediaChannelKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs) << std::endl;
-  std::cout << DynamicKey5::generateRecordingKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs) << std::endl;
-  std::cout << DynamicKey5::generateInChannelPermissionKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs, DynamicKey5::noUpload()) << std::endl;
-  std::cout << DynamicKey5::generateInChannelPermissionKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs, DynamicKey5::audioVideoUpload()) << std::endl;
-
   return 0;
 }
 
@@ -113,30 +109,12 @@ func main() {
     uid:=uint32(2882341273)
     randomInt:=uint32(58964981)
     expiredTs:=uint32(1446455471)
-    var publicSharingKey,sharingError = DynamicKey5.GeneratePublicSharingKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs)
-    if sharingError == nil {
-        fmt.Println(publicSharingKey)
-    }
 
     var mediaChannelKey,channelError = DynamicKey5.GenerateMediaChannelKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs)
     if channelError == nil {
         fmt.Println(mediaChannelKey)
     }
 
-    var recordingKey,recordingError = DynamicKey5.GenerateRecordingKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs)
-    if recordingError == nil {
-        fmt.Println(recordingKey)
-    }
-
-    var noUploadKey,noUploadError = DynamicKey5.GenerateInChannelPermissionKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs, DynamicKey5.NoUpload)
-    if noUploadError == nil {
-        fmt.Println(noUploadKey)
-    }
-
-    var audioVideoUploadKey,audioVideoUploadError = DynamicKey5.GenerateInChannelPermissionKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs, DynamicKey5.AudioVideoUpload)
-    if audioVideoUploadError == nil {
-        fmt.Println(audioVideoUploadKey)
-    }
 }
 ```
 
@@ -160,9 +138,6 @@ public class DynamicKey5Sample {
 
     public static void main(String[] args) throws Exception {
         System.out.println(DynamicKey5.generateMediaChannelKey(appID, appCertificate, channel, ts, r, uid, expiredTs));
-        System.out.println(DynamicKey5.generateRecordingKey(appID, appCertificate, channel, ts, r, uid, expiredTs));
-        System.out.println(DynamicKey5.generateInChannelPermissionKey(appID, appCertificate, channel, ts, r, uid, expiredTs, DynamicKey5.noUpload));
-        System.out.println(DynamicKey5.generateInChannelPermissionKey(appID, appCertificate, channel, ts, r, uid, expiredTs, DynamicKey5.audioVideoUpload));
     }
 }
 ```
@@ -178,12 +153,7 @@ var r = Math.floor(Math.random() * 0xFFFFFFFF);
 var uid = 2882341273;
 var expiredTs = 0;
 
-console.log("5 recording key: " + DynamicKey5.generateRecordingKey(appID, appCertificate, channel, ts, r, uid, expiredTs));
 console.log("5 channel key: " + DynamicKey5.generateMediaChannelKey(appID, appCertificate, channel, ts, r, uid, expiredTs));
-console.log("5 in channel permission key(no upload): "
-    + DynamicKey5.generateInChannelPermissionKey(appID, appCertificate, channel, ts, r, uid, expiredTs, DynamicKey5.noUpload));
-console.log("5 in channel permission key(audio video upload): "
-    + DynamicKey5.generateInChannelPermissionKey(appID, appCertificate, channel, ts, r, uid, expiredTs, DynamicKey5.audioVideoUpload));
 ```
 
 ## PHP
@@ -199,15 +169,7 @@ $randomInt = 58964981;
 $uid = 2882341273;
 $expiredTs = 1446455471;
 
-echo generateRecordingKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs) . "\n";
 echo generateMediaChannelKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs) . "\n";
-
-global $NO_UPLOAD;
-
-echo generateInChannelPermissionKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $NO_UPLOAD) . "\n";
-
-global $AUDIO_VIDEO_UPLOAD;
-echo generateInChannelPermissionKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $AUDIO_VIDEO_UPLOAD) . "\n";
 ?>
 
 ```
@@ -233,11 +195,7 @@ expiredts = 0
 print "%.8x" % (randomint & 0xFFFFFFFF)
 
 if __name__ == "__main__":
-    print generateRecordingKey(appID, appCertificate, channelname, unixts, randomint, uid, expiredts)
     print generateMediaChannelKey(appID, appCertificate, channelname, unixts, randomint, uid, expiredts)
-    print generatePublicSharingKey(appID, appCertificate, channelname, unixts, randomint, uid, expiredts)
-    print generateInChannelPermissionKey(appID, appCertificate, channelname, unixts, randomint, uid, expiredts, NoUpload)
-    print generateInChannelPermissionKey(appID, appCertificate, channelname, unixts, randomint, uid, expiredts, AudioVideoUpload)
 
 ```
 
@@ -254,17 +212,10 @@ expired_ts = 0
 
 puts "%.8x" % (random_int & 0xFFFFFFFF)
 
-recording_key = DynamicKey5.gen_recording_key(app_id, app_certificate, channel_name, unix_ts, random_int, uid, expired_ts)
 media_channel_key = DynamicKey5.gen_media_channel_key(app_id, app_certificate, channel_name, unix_ts, random_int, uid, expired_ts)
-public_sharing_key = DynamicKey5.gen_public_sharing_key(app_id, app_certificate, channel_name, unix_ts, random_int, uid, expired_ts)
-in_channel_permission_key1 = DynamicKey5.gen_in_channel_permission_key(app_id, app_certificate, channel_name, unix_ts, random_int, uid, expired_ts, DynamicKey5::NO_UPLOAD)
-in_channel_permission_key2 = DynamicKey5.gen_in_channel_permission_key(app_id, app_certificate, channel_name, unix_ts, random_int, uid, expired_ts, DynamicKey5::AUDIO_VIDEO_UPLOAD)
 
-puts "recording_key:#{recording_key}"
 puts "media_channel_key:#{media_channel_key}"
-puts "public_sharing_key:#{public_sharing_key}"
-puts "in_channel_permission_key1:#{in_channel_permission_key1}"
-puts "in_channel_permission_key2:#{in_channel_permission_key2}"
+
 
 ```
 
