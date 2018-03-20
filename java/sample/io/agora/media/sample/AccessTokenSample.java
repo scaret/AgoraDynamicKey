@@ -1,4 +1,4 @@
-package io.agora.media.tool;
+package io.agora.media.sample;
 
 import io.agora.media.AccessToken;
 import io.agora.media.Utils;
@@ -8,11 +8,11 @@ public class AccessTokenSample {
     static String appCertificate = "5CFd2fd1755d40ecb72977518be15d3b";
     static String channelName = "7d72365eb983485397e3e3f9d460bdda";
     static String uid = "2882341273";
-    static int expiredTs = 0;
+    static int expireTimestamp = 0;
 
     public static void main(String[] args) throws Exception {
         AccessToken token = new AccessToken(appId, appCertificate, channelName, uid);
-        token.addPrivilege(AccessToken.Privileges.kJoinChannel, expiredTs);
+        token.addPrivilege(AccessToken.Privileges.kJoinChannel, expireTimestamp);
         String result = token.build();
         System.out.println(result);
 
