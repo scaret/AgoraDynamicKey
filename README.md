@@ -20,14 +20,13 @@ std::string token = key.Build();
 Sample Code for generating AccessToken are available on the following platforms:
 
  + C++
- + GO
+ + Go
  + Java
  + Node.js
  + Python
  + PHP
-.. note::
 
-   You can use either the following SimpleTokenBuilder or AccessToken sample code to generate an AccessToken. SimpleTokenBuilder encapsulates several APIs used by the underlying AccessToken sample code and is easy to use.
+> You can use either the following SimpleTokenBuilder or AccessToken sample code to generate an AccessToken. SimpleTokenBuilder encapsulates the underlying AccessToken sample code and is easy to use.
 
 ### C++
 
