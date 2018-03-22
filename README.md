@@ -1,10 +1,13 @@
 # AgoraDynamicKey
 
+This page describes the authentication mechanism used by the Agora SDK, as well as providing the related code for generating AccessToken (v2.1.0) or Dynamic Key (v2.0.2 or earlier).
+
+
 ## AccessToken
 
-AccessToken is more powerful than the original Dynamic Key. It can include several privileges in one token which can be sent to various services from Agora.
+AccessToken is more powerful than the legacy Dynamic Key. It encapsulates several privileges in one token to cover various services provided by Agora.
 
-AccessToken is available from SDK 2.1.0 or later.
+AccessToken is available as of SDK 2.1.0.
 
 Sample usage,
 
@@ -14,12 +17,44 @@ a.AddPrivilege(AccessToken::kJoinChannel);
 a.AddPrivilege(AccessToken::kPublishAudioStream);
 std::string token = key.Build();
 ```
+Sample Code for generating AccessToken are available on the following platforms:
 
-### Note
+ + C++
+ + GO
+ + Java
+ + Node.js
+ + Python
+ + PHP
 
-Languages not available for now.
-* Java
-* PHP
+### C++
+
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/cpp/src/SimpleTokenBuilder.h
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/cpp/src/AccessToken.h
+
+### GO
+
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/go/src/SimpleTokenBuilder/SimpleTokenBuilder.go
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/go/src/SimpleTokenBuilder/AccessToken.go
+
+### Java
+
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/java/src/io/agora/media/SimpleTokenBuilder.java
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/java/src/io/agora/media/AccessToken.java
+
+### Node.js
+
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/nodejs/src/SimpleTokenBuilder.js
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/nodejs/src/AccessToken.js
+
+### Python
+
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/python/src/SimpleTokenBuilder.py
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/python/src/AccessToken.py
+
+### PHP
+
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/php/src/SimpleTokenBuilder.php
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/php/src/AccessToken.php
 
 ### **YOUR IMPLIMENTATION ARE VERY WELCOME.**
 
@@ -28,22 +63,24 @@ If you implement our algorithm in other languages, please kindly send us a pull 
 
 ## Dynamic Key
 
-For joining media channel, use generateMediaChannelKey.
+The Dynamic Key is used by Agora SDK of versions earlier than 2.1.
 
-For recording service, use generateRecordingKey.
+ + To join a media channel, use generateMediaChannelKey.
+ + For recording services, use generateRecordingKey.
 
-Here are sample for C++, Go, Java, Nodejs, PHP and Python.
+Following are samples for C++, Go, Java, Nodejs, PHP and Python.
 
-## SDK and Dynamic Key Compatibility
-Note: It is recommended for you to upgrade to DynamicKey5 ASAP.
+### SDK and Dynamic Key Compatibility
 
-### If you need to verify user permission in channel:
+If you are using the Agora SDK of a version earlier than 2.1 and looking at implementing the function of publishing with a permission key, Agora recommends that you upgrade to DynamicKey5.
+
+#### To verify user permission in channel:
 | Dynamic Key Version | UID | SDK Version  |
 |---|---|---|
 | DynamicKey5  | specify the permission | 1.7.0 or later  |
 
 
-### If you need to verify the User ID:
+#### To verify the User ID:
 
 | Dynamic Key Version | UID | SDK Version  |
 |---|---|---|
@@ -52,7 +89,7 @@ Note: It is recommended for you to upgrade to DynamicKey5 ASAP.
 | DynamicKey3  | specify uid of user  | 1.2.3 or later  |
 | DynamicKey  |  NA |  NA |
 
-### If you do not need to verify the User ID:
+#### If you do not need to verify the User ID:
 
 | Dynamic Key Version | UID | SDK Version  |
 |---|---|---|
@@ -63,7 +100,7 @@ Note: It is recommended for you to upgrade to DynamicKey5 ASAP.
 
 
 
-## C++
+### C++
 ```c
 /**
  * build with command:
@@ -87,16 +124,12 @@ int main(int argc, char const *argv[]) {
 
   std::cout << std::endl;
   std::cout << DynamicKey5::generateMediaChannelKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs) << std::endl;
-  std::cout << DynamicKey5::generateRecordingKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs) << std::endl;
-  std::cout << DynamicKey5::generateInChannelPermissionKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs, DynamicKey5::noUpload()) << std::endl;
-  std::cout << DynamicKey5::generateInChannelPermissionKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs, DynamicKey5::audioVideoUpload()) << std::endl;
-
   return 0;
 }
 
 ```
 
-## Go
+### Go
 ```go
 package main
 
@@ -113,34 +146,16 @@ func main() {
     uid:=uint32(2882341273)
     randomInt:=uint32(58964981)
     expiredTs:=uint32(1446455471)
-    var publicSharingKey,sharingError = DynamicKey5.GeneratePublicSharingKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs)
-    if sharingError == nil {
-        fmt.Println(publicSharingKey)
-    }
 
     var mediaChannelKey,channelError = DynamicKey5.GenerateMediaChannelKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs)
     if channelError == nil {
         fmt.Println(mediaChannelKey)
     }
 
-    var recordingKey,recordingError = DynamicKey5.GenerateRecordingKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs)
-    if recordingError == nil {
-        fmt.Println(recordingKey)
-    }
-
-    var noUploadKey,noUploadError = DynamicKey5.GenerateInChannelPermissionKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs, DynamicKey5.NoUpload)
-    if noUploadError == nil {
-        fmt.Println(noUploadKey)
-    }
-
-    var audioVideoUploadKey,audioVideoUploadError = DynamicKey5.GenerateInChannelPermissionKey(appID, appCertificate, channelName, unixTs, randomInt, uid, expiredTs, DynamicKey5.AudioVideoUpload)
-    if audioVideoUploadError == nil {
-        fmt.Println(audioVideoUploadKey)
-    }
 }
 ```
 
-## Java
+### Java
 ```java
 package io.agora.media.sample;
 
@@ -160,14 +175,11 @@ public class DynamicKey5Sample {
 
     public static void main(String[] args) throws Exception {
         System.out.println(DynamicKey5.generateMediaChannelKey(appID, appCertificate, channel, ts, r, uid, expiredTs));
-        System.out.println(DynamicKey5.generateRecordingKey(appID, appCertificate, channel, ts, r, uid, expiredTs));
-        System.out.println(DynamicKey5.generateInChannelPermissionKey(appID, appCertificate, channel, ts, r, uid, expiredTs, DynamicKey5.noUpload));
-        System.out.println(DynamicKey5.generateInChannelPermissionKey(appID, appCertificate, channel, ts, r, uid, expiredTs, DynamicKey5.audioVideoUpload));
     }
 }
 ```
 
-## Node.js
+### Node.js
 ```javascript
 var DynamicKey5 = require('../src/DynamicKey5');
 var appID  = "970ca35de60c44645bbae8a215061b33";
@@ -178,15 +190,10 @@ var r = Math.floor(Math.random() * 0xFFFFFFFF);
 var uid = 2882341273;
 var expiredTs = 0;
 
-console.log("5 recording key: " + DynamicKey5.generateRecordingKey(appID, appCertificate, channel, ts, r, uid, expiredTs));
 console.log("5 channel key: " + DynamicKey5.generateMediaChannelKey(appID, appCertificate, channel, ts, r, uid, expiredTs));
-console.log("5 in channel permission key(no upload): "
-    + DynamicKey5.generateInChannelPermissionKey(appID, appCertificate, channel, ts, r, uid, expiredTs, DynamicKey5.noUpload));
-console.log("5 in channel permission key(audio video upload): "
-    + DynamicKey5.generateInChannelPermissionKey(appID, appCertificate, channel, ts, r, uid, expiredTs, DynamicKey5.audioVideoUpload));
 ```
 
-## PHP
+### PHP
 ```php
 <?php
 include "../src/DynamicKey5.php";
@@ -199,20 +206,12 @@ $randomInt = 58964981;
 $uid = 2882341273;
 $expiredTs = 1446455471;
 
-echo generateRecordingKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs) . "\n";
 echo generateMediaChannelKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs) . "\n";
-
-global $NO_UPLOAD;
-
-echo generateInChannelPermissionKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $NO_UPLOAD) . "\n";
-
-global $AUDIO_VIDEO_UPLOAD;
-echo generateInChannelPermissionKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $AUDIO_VIDEO_UPLOAD) . "\n";
 ?>
 
 ```
 
-## Python
+### Python
 ```python
 import sys
 import os
@@ -233,15 +232,11 @@ expiredts = 0
 print "%.8x" % (randomint & 0xFFFFFFFF)
 
 if __name__ == "__main__":
-    print generateRecordingKey(appID, appCertificate, channelname, unixts, randomint, uid, expiredts)
     print generateMediaChannelKey(appID, appCertificate, channelname, unixts, randomint, uid, expiredts)
-    print generatePublicSharingKey(appID, appCertificate, channelname, unixts, randomint, uid, expiredts)
-    print generateInChannelPermissionKey(appID, appCertificate, channelname, unixts, randomint, uid, expiredts, NoUpload)
-    print generateInChannelPermissionKey(appID, appCertificate, channelname, unixts, randomint, uid, expiredts, AudioVideoUpload)
 
 ```
 
-## Ruby
+### Ruby
 ```ruby
 require '../src/dynamic_key5'
 app_id = "970ca35de60c44645bbae8a215061b33"
@@ -254,17 +249,9 @@ expired_ts = 0
 
 puts "%.8x" % (random_int & 0xFFFFFFFF)
 
-recording_key = DynamicKey5.gen_recording_key(app_id, app_certificate, channel_name, unix_ts, random_int, uid, expired_ts)
 media_channel_key = DynamicKey5.gen_media_channel_key(app_id, app_certificate, channel_name, unix_ts, random_int, uid, expired_ts)
-public_sharing_key = DynamicKey5.gen_public_sharing_key(app_id, app_certificate, channel_name, unix_ts, random_int, uid, expired_ts)
-in_channel_permission_key1 = DynamicKey5.gen_in_channel_permission_key(app_id, app_certificate, channel_name, unix_ts, random_int, uid, expired_ts, DynamicKey5::NO_UPLOAD)
-in_channel_permission_key2 = DynamicKey5.gen_in_channel_permission_key(app_id, app_certificate, channel_name, unix_ts, random_int, uid, expired_ts, DynamicKey5::AUDIO_VIDEO_UPLOAD)
 
-puts "recording_key:#{recording_key}"
 puts "media_channel_key:#{media_channel_key}"
-puts "public_sharing_key:#{public_sharing_key}"
-puts "in_channel_permission_key1:#{in_channel_permission_key1}"
-puts "in_channel_permission_key2:#{in_channel_permission_key2}"
+
 
 ```
-

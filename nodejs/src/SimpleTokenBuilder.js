@@ -66,8 +66,8 @@ var SimpleTokenBuilder = function (appID, appCertificate, channelName, uid) {
         let rolePri = RolePrivileges[role];
         builder.key.messages = JSON.parse(JSON.stringify(rolePri));
     }
-    this.setPrivilege = function (privilege, timeoutFromNow) {
-        builder.key.messages[privilege] = Math.floor(new Date() / 1000) + timeoutFromNow;
+    this.setPrivilege = function (privilege, expireTimestamp) {
+        builder.key.messages[privilege] = expireTimestamp;
     }
     this.removePrivilege = function (privilege) {
         delete builder.key.messages[privilege];

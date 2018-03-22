@@ -113,8 +113,8 @@ struct AccessToken {
     return ss.str();
   }
 
-  void AddPrivilege(Privileges privilege, uint32_t timeoutFromNow = 0) {
-    message_.messages[privilege] = time(NULL) + timeoutFromNow;
+  void AddPrivilege(Privileges privilege, uint32_t expireTimestamp = 0) {
+    message_.messages[privilege] = expireTimestamp;
   }
 
   bool FromString(const std::string& channelKeyString) {

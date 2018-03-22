@@ -65,8 +65,8 @@ class AccessToken:
         self.salt = random.randint(1, 99999999)
         self.messages = {}
 
-    def AddPrivilege(self, key, secondsFromNow):
-        self.messages[key] = int(time.time()) + secondsFromNow
+    def AddPrivilege(self, privilege, expireTimestamp):
+        self.messages[privilege] = expireTimestamp
 
     def build(self):
 

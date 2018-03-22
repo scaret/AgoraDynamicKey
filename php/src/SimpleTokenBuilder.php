@@ -65,8 +65,8 @@ class SimpleTokenBuilder
             $this->setPrivilege($key, $value);
         }
     }
-    public function setPrivilege($privilege, $ts){
-        $this->token->addPrivilege($privilege, $ts);
+    public function setPrivilege($privilege, $expireTimestamp){
+        $this->token->addPrivilege($privilege, $expireTimestamp);
     }
     public function removePrivilege($privilege){
         unset($this->token->message->privileges[$privilege]);

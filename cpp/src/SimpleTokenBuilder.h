@@ -29,7 +29,7 @@ namespace agora {
 
             bool initTokenBuilder(const std::string& originToken);
             bool initPrivileges(Role role);
-            void setPrivilege(AccessToken::Privileges privilege, uint32_t timeoutFromNow = 0);
+            void setPrivilege(AccessToken::Privileges privilege, uint32_t expireTimestamp = 0);
             void removePrivilege(AccessToken::Privileges privilege);
             std::string buildToken();
 
@@ -80,9 +80,9 @@ namespace agora {
             return true;
         }
 
-        void SimpleTokenBuilder::setPrivilege(AccessToken::Privileges privilege, uint32_t timeoutFromNow)
+        void SimpleTokenBuilder::setPrivilege(AccessToken::Privileges privilege, uint32_t expireTimestamp)
         {
-            m_tokenCreator.message_.messages[privilege] = time(NULL) + timeoutFromNow;
+            m_tokenCreator.message_.messages[privilege] = expireTimestamp;
         }
 
         void SimpleTokenBuilder::removePrivilege(AccessToken::Privileges privilege)

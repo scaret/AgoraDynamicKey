@@ -13,10 +13,10 @@ int main(int argc, char const *argv[]) {
   std::string  appCertificate = "5CFd2fd1755d40ecb72977518be15d3b";
   std::string channelName= "7d72365eb983485397e3e3f9d460bdda";
   uint32_t uid = 2882341273;
-  uint32_t expiredTs = 24 * 3600;
+  uint32_t expireTimestamp = 0;
 
   AccessToken key(appID, appCertificate, channelName, uid);
-  key.AddPrivilege(AccessToken::Privileges::kJoinChannel, expiredTs);
+  key.AddPrivilege(AccessToken::Privileges::kJoinChannel, expireTimestamp);
 
   std::string result = key.Build();
   std::cout << result << std::endl;

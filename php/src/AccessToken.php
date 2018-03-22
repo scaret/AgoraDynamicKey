@@ -61,9 +61,9 @@ class AccessToken
         $this->message = new Message();
     }
 
-    public function addPrivilege($key, $seconds)
+    public function addPrivilege($key, $expireTimestamp)
     {
-        $this->message->privileges[$key] = $seconds;
+        $this->message->privileges[$key] = $expireTimestamp;
         return $this;
     }
 

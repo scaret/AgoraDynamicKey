@@ -11,7 +11,7 @@ public class AccessTokenTest {
     private String uid = "2882341273";
     private int ts = 1111111;
     private int salt = 1;
-    private int expiredTs = 1446455471;
+    private int expireTimestamp = 1446455471;
 
     @Test
     public void testGenerateDynamicKey() throws Exception {
@@ -19,7 +19,7 @@ public class AccessTokenTest {
         AccessToken token = new AccessToken(appId, appCertificate, channelName, uid);
         token.message.ts = ts;
         token.message.salt = salt;
-        token.addPrivilege(AccessToken.Privileges.kJoinChannel, expiredTs);
+        token.addPrivilege(AccessToken.Privileges.kJoinChannel, expireTimestamp);
         String result = token.build();
         assertEquals(expected, result);
     }
@@ -31,7 +31,7 @@ public class AccessTokenTest {
         AccessToken key = new AccessToken(appId, appCertificate, channelName, uid);
         key.message.salt = salt;
         key.message.ts = ts;
-        key.message.messages.put((short)AccessToken.Privileges.kJoinChannel.intValue, expiredTs);
+        key.message.messages.put((short)AccessToken.Privileges.kJoinChannel.intValue, expireTimestamp);
         String result = key.build();
         assertEquals(expected, result);
     }

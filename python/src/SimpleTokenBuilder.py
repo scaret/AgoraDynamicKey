@@ -65,8 +65,8 @@ class SimpleTokenBuilder:
     def initPrivileges(self, role) :
 	    self.token.messages = RolePrivileges[role]
 
-    def setPrivilege(self, privilege, timeoutFromNow) :
-	    self.token.messages[privilege] = int(time.time()) + timeoutFromNow
+    def setPrivilege(self, privilege, expireTimestamp) :
+	    self.token.messages[privilege] = expireTimestamp
 
     def removePrivilege(self, privilege) :
 	    self.token.messages.pop(privilege)

@@ -40,8 +40,8 @@ var AccessToken = function (appID, appCertificate, channelName, uid) {
         return (version + token.appID + content.toString('base64'));
     }
 
-    this.addPriviledge = function (key, secondsFromNow) {
-        token.messages[key] = Math.floor(new Date() / 1000) + secondsFromNow;
+    this.addPriviledge = function (priviledge, expireTimestamp) {
+        token.messages[priviledge] = expireTimestamp;
     };
 
 };
