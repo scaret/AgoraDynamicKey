@@ -57,12 +57,12 @@ func CreateAccessToken(appID, appCertificate, channelName string, uid uint32) Ac
     return AccessToken{appID, appCertificate, channelName, uidStr, ts, salt, message}
 }
 
-func (token AccessToken) AddPrivilege(privilege Privileges, expireTimestamp uint32) {
+func (token *AccessToken) AddPrivilege(privilege Privileges, expireTimestamp uint32) {
 	pri := uint16(privilege)
 	token.Message[pri] = expireTimestamp
 }
 
-func (token AccessToken) Build() (string, error) {
+func (token *AccessToken) Build() (string, error) {
 	ret := ""
 	version := "006"
 

@@ -2,9 +2,6 @@ package SimpleTokenBuilder
 
 import (
 	"../AccessToken"
-	"fmt"
-	"time"
-	"math/rand"
 )
 
 type Role uint16
@@ -60,39 +57,28 @@ type SimpleTokenBuilder struct {
 	Token AccessToken.AccessToken
 }
 
-func random(min int, max int) int {
-	rand.Seed(time.Now().UnixNano())
-    return rand.Intn(max-min) + min
-}
-
 func CreateSimpleTokenBuilder(appID, appCertificate, channelName string, uid uint32) SimpleTokenBuilder {
-	uidStr := fmt.Sprintf("%d", uid)
-	ts := uint32(time.Now().Unix()) + 24 * 3600
-	salt := uint32(random(1, 99999999))
-	message := make(map[uint16]uint32)
-	token := AccessToken.AccessToken{appID, appCertificate, channelName, uidStr, ts, salt, message}
-    return SimpleTokenBuilder{token}
+    return SimpleTokenBuilder{AccessToken.CreateAccessToken(appID, appCertificate, channelName, uid)}
 }
 
-func (builder SimpleTokenBuilder) InitPrivileges(role Role) {
+func (builder *SimpleTokenBuilder) InitPrivileges(role Role) {
 	rolepri := uint16(role)
-	//builder.Token.Message = make(map[uint16]uint32)
 	for key, value := range RolePrivileges[rolepri] {
 		builder.Token.Message[key] = value
 	}
 }
 
-func (builder SimpleTokenBuilder) SetPrivilege(privilege AccessToken.Privileges, expireTimestamp uint32) {
+func (builder *SimpleTokenBuilder) SetPrivilege(privilege AccessToken.Privileges, expireTimestamp uint32) {
 	pri := uint16(privilege)
 	builder.Token.Message[pri] = expireTimestamp
 }
 
-func (builder SimpleTokenBuilder) RemovePrivilege(privilege AccessToken.Privileges) {
+func (builder *SimpleTokenBuilder) RemovePrivilege(privilege AccessToken.Privileges) {
 	pri := uint16(privilege)
 	delete(builder.Token.Message, pri)
 }
 
-func (builder SimpleTokenBuilder) BuildToken() (string,error) {
+func (builder *SimpleTokenBuilder) BuildToken() (string,error) {
 	return builder.Token.Build()
 }
 
