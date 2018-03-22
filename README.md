@@ -25,16 +25,19 @@ Sample Code for generating AccessToken are available on the following platforms:
  + Node.js
  + Python
  + PHP
+.. note::
+
+   You can use either the following SimpleTokenBuilder or AccessToken sample code to generate an AccessToken. SimpleTokenBuilder encapsulates several APIs used by the underlying AccessToken sample code and is easy to use.
 
 ### C++
 
 + https://github.com/AgoraIO/AgoraDynamicKey/blob/master/cpp/src/SimpleTokenBuilder.h
 + https://github.com/AgoraIO/AgoraDynamicKey/blob/master/cpp/src/AccessToken.h
 
-### GO
+### Go
 
 + https://github.com/AgoraIO/AgoraDynamicKey/blob/master/go/src/SimpleTokenBuilder/SimpleTokenBuilder.go
-+ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/go/src/SimpleTokenBuilder/AccessToken.go
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/go/src/AccessToken/AccessToken.go
 
 ### Java
 
@@ -56,14 +59,14 @@ Sample Code for generating AccessToken are available on the following platforms:
 + https://github.com/AgoraIO/AgoraDynamicKey/blob/master/php/src/SimpleTokenBuilder.php
 + https://github.com/AgoraIO/AgoraDynamicKey/blob/master/php/src/AccessToken.php
 
-### **YOUR IMPLIMENTATION ARE VERY WELCOME.**
+### **YOUR IMPLEMENTATIONS ARE VERY WELCOME.**
 
-If you implement our algorithm in other languages, please kindly send us a pull request for review. If your implementation is correct and with test cases, we are very happy to merge it. Thank you very much!
+If you have implemented our algorithm in other languages, kindly file a pull request with us. We are delighted to merge any of the implementations that are correct and have test cases. Many thanks.
 
 
 ## Dynamic Key
 
-The Dynamic Key is used by Agora SDK of versions earlier than 2.1.
+The Dynamic Key is used by Agora SDKs of versions earlier than 2.1.
 
  + To join a media channel, use generateMediaChannelKey.
  + For recording services, use generateRecordingKey.
