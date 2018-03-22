@@ -1,5 +1,3 @@
-import random
-import time
 import os
 import sys
 from collections import OrderedDict
@@ -57,10 +55,6 @@ class SimpleTokenBuilder:
 
     def __init__(self, appID, appCertificate, channelName, uid):   
         self.token = AccessToken(appID, appCertificate, channelName, uid)
-        random.seed(time.time())
-        self.token.ts = int(time.time()) + 24 * 3600
-        self.token.salt = random.randint(1, 99999999)
-        self.token.messages = {}
 
     def initPrivileges(self, role) :
 	    self.token.messages = RolePrivileges[role]

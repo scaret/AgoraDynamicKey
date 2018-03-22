@@ -1,6 +1,5 @@
 var AccessToken = require('../src/AccessToken').AccessToken;
 var Priviledges = require('../src/AccessToken').priviledges;
-var randomInt = Math.floor(Math.random() * 0xFFFFFFFF);
 
 var Role = {
     kRoleAttendee: 0,  // for communication
@@ -54,9 +53,6 @@ var RolePrivileges = {
 var SimpleTokenBuilder = function (appID, appCertificate, channelName, uid) {
     let builder = this;
     this.key = new AccessToken(appID, appCertificate, channelName, uid);
-    this.key.salt = randomInt;
-    this.key.ts = Math.floor(new Date() / 1000) + (24 * 3600);
-    this.key.messages = {};
 
     this.buildToken = function () {
         return builder.key.build();
