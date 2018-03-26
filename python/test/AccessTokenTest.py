@@ -25,7 +25,7 @@ class AccessTokenTest(unittest.TestCase):
         key.ts = ts
         key.messages[AccessToken.kJoinChannel] = expireTimestamp
 
-        result = key.build()
+        result = key.Build()
         self.assertEqual(expected, result)
 
 if __name__ == "__main__":
