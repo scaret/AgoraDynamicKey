@@ -3,6 +3,8 @@ var crc32 = require('crc-32');
 var UINT32 = require('cuint').UINT32;
 var version = "006";
 var randomInt = Math.floor(Math.random() * 0xFFFFFFFF);
+const VERSION_LENGTH = 3;
+const APP_ID_LENGTH = 32;
 
 var AccessToken = function (appID, appCertificate, channelName, uid) {
     let token = this;
@@ -44,6 +46,34 @@ var AccessToken = function (appID, appCertificate, channelName, uid) {
         token.messages[priviledge] = expireTimestamp;
     };
 
+    this.fromString = function (originToken) {
+        try {
+            originVersion = originToken.substr(0, VERSION_LENGTH);
+            if(originVersion != version) {
+                return false;
+            }
+            var originAppID = originToken.substr(VERSION_LENGTH, (VERSION_LENGTH + APP_ID_LENGTH));
+            var originContent = originToken.substr((VERSION_LENGTH + APP_ID_LENGTH));
+            var originContentDecodedBuf = Buffer.from(originContent, 'base64');
+
+            var content = unPackContent(originContentDecodedBuf);
+            this.signature = content.signature;
+            this.crc_channel_name = content.crc_channel_name;
+            this.crc_uid = content.crc_uid;
+            this.m = content.m;
+
+            var msgs = unPackMessages(this.m);
+            this.salt = msgs.salt;
+            this.ts = msgs.ts;
+            this.messages = msgs.messages;
+            
+        } catch (err) {
+            console.log(err);
+            return false;
+        }
+        
+        return true;
+    };
 };
 
 module.exports.version = version;
@@ -134,10 +164,51 @@ var ByteBuf = function () {
 
         return that;
     };
-
+    
     return that;
 }
 
+
+var ReadByteBuf = function(bytes) {
+    var that = {
+        buffer: bytes
+        , position: 0
+    };
+
+    that.getUint16 = function () {
+        var ret = that.buffer.readUInt16LE(that.position);
+        that.position += 2;
+        return ret;
+    };
+
+    that.getUint32 = function () {
+        var ret = that.buffer.readUInt32LE(that.position);
+        that.position += 4;
+        return ret;
+    };
+
+    that.getString = function () {
+        var len = that.getUint16();
+
+        var out = new Buffer(len);
+        that.buffer.copy(out, 0, that.position, (that.position + len));
+        that.position += len;
+        return out;
+    };
+
+    that.getTreeMapUInt32 = function () {
+        var map = {};
+        var len = that.getUint16();
+        for( var i = 0; i < len; i++) {
+            var key = that.getUint16();
+            var value = that.getUint32();
+            map[key] = value;
+        }
+        return map;
+    };
+
+    return that;
+}
 var AccessTokenContent = function (options) {
     options.pack = function () {
         var out = new ByteBuf();
@@ -161,4 +232,23 @@ var Message = function (options) {
     }
 
     return options;
+}
+
+var unPackContent = function(bytes) {
+    var readbuf = new ReadByteBuf(bytes);
+    return AccessTokenContent({
+        signature: readbuf.getString(),
+        crc_channel_name: readbuf.getUint32(),
+        crc_uid: readbuf.getUint32(),
+        m: readbuf.getString()
+    });
+}
+
+var unPackMessages = function(bytes) {
+    var readbuf = new ReadByteBuf(bytes);
+    return Message({
+        salt: readbuf.getUint32(),
+        ts: readbuf.getUint32(),
+        messages: readbuf.getTreeMapUInt32()
+    });
 }
