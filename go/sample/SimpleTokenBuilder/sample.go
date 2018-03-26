@@ -21,7 +21,8 @@ func main() {
 	builder.SetPrivilege(AccessToken.KPublishVideoStream, expireTimestamp)
 	builder.SetPrivilege(AccessToken.KPublishDataStream, expireTimestamp)
 
-	if result, err := builder.BuildToken(); err != nil {
+	result, err := builder.BuildToken()
+	if err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Println(result)
