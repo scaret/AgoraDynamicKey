@@ -67,7 +67,12 @@ func getVersion() string {
 }
 
 func CreateAccessToken(appID, appCertificate, channelName string, uid uint32) AccessToken {
-	uidStr := fmt.Sprintf("%d", uid)
+	var uidStr string
+	if (uid == 0) {
+		uidStr = ""
+	} else {
+		uidStr = fmt.Sprintf("%d", uid)
+	}
 	ts := uint32(time.Now().Unix()) + 24 * 3600
 	salt := uint32(random(1, 99999999))
 	message := make(map[uint16]uint32)
