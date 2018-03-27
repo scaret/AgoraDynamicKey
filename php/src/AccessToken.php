@@ -56,7 +56,12 @@ class AccessToken
         $this->appID = $appID;
         $this->appCertificate = $appCertificate;
         $this->channelName = $channelName;
-        $this->uid = $uid;
+
+        if($uid === 0 || $uid === "0"){
+            $this->uid = "";
+        } else {
+            $this->uid = $uid;
+        }
 
         $this->message = new Message();
     }
