@@ -11,11 +11,14 @@ var AccessToken = function (appID, appCertificate, channelName, uid) {
     this.appID = appID;
     this.appCertificate = appCertificate;
     this.channelName = channelName;
-    this.uid = `${uid}`;
     this.messages = {};
     this.salt = randomInt;
     this.ts = Math.floor(new Date() / 1000) + (24 * 3600);
-
+    if (uid === 0) {
+        this.uid = "";
+    } else {
+        this.uid = `${uid}`;
+    }
 
     this.build = function () {
         var m = Message({
