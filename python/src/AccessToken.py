@@ -118,10 +118,13 @@ class AccessToken:
         self.appID = appID
         self.appCertificate = appCertificate
         self.channelName = channelName
-        self.uidStr = str(uid)
         self.ts = int(time.time()) + 24 * 3600
         self.salt = random.randint(1, 99999999)
         self.messages = {}
+        if (uid == 0):
+            self.uidStr = ""
+        else:
+            self.uidStr = str(uid)
 
     def AddPrivilege(self, privilege, expireTimestamp):
         self.messages[privilege] = expireTimestamp
