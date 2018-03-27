@@ -61,6 +61,17 @@ class AccessToken_test : public testing::Test {
     testAccessToken(expected, key);
   }
 
+  void testAccessTokenWithIntUidZero() {
+    std::string expected =
+        "006970CA35de60c44645bbae8a215061b33IACw1o7htY6ISdNRtku3p9tjTPi0jCKf9t49UHJhzCmL6bdIfRAAAAAAEAABAAAAR/QQAAEAAQCvKDdW";
+    uint32_t uid_zero = 0;
+    AccessToken key(appID, appCertificate, channelName, uid_zero);
+    key.message_.salt = 1;
+    key.message_.ts = 1111111;
+    key.message_.messages[AccessToken::Privileges::kJoinChannel] = expiredTs;
+    testAccessToken(expected, key);
+  }
+
   void testAccessTokenWithStringUid() {
     std::string expected =
         "006970CA35de60c44645bbae8a215061b33IACV0fZUBw+"
@@ -96,6 +107,9 @@ class AccessToken_test : public testing::Test {
 // }
 TEST_F(AccessToken_test, testAccessTokenWithIntUid) {
   testAccessTokenWithIntUid();
+}
+TEST_F(AccessToken_test, testAccessTokenWithIntUidZero) {
+  testAccessTokenWithIntUidZero();
 }
 TEST_F(AccessToken_test, testAccessTokenWithStringUid) {
   testAccessTokenWithStringUid();
