@@ -19,9 +19,9 @@ expireTimestamp = 0
 def main():
   
   key = AccessToken.AccessToken(appID, appCertificate, channelName, uid)
-  key.AddPrivilege(AccessToken.kJoinChannel, expireTimestamp)
+  key.addPrivilege(AccessToken.kJoinChannel, expireTimestamp)
   
-  result = key.Build()
+  result = key.build()
   print result
 
 if __name__ == "__main__":

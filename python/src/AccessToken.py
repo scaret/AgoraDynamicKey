@@ -27,7 +27,7 @@ APP_ID_LENGTH = 32
 
 
 def getVersion():
-    return '{0:0>3}'.format(6)
+    return '006'
     
 
 def packUint16(x):
@@ -126,10 +126,10 @@ class AccessToken:
         else:
             self.uidStr = str(uid)
 
-    def AddPrivilege(self, privilege, expireTimestamp):
+    def addPrivilege(self, privilege, expireTimestamp):
         self.messages[privilege] = expireTimestamp
 
-    def FromString(self, originToken):
+    def fromString(self, originToken):
         try:
             dk6version = getVersion()
             originVersion = originToken[:VERSION_LENGTH]
@@ -149,7 +149,7 @@ class AccessToken:
 
         return True
 
-    def Build(self):
+    def build(self):
 
         self.messages = OrderedDict(sorted(self.messages.iteritems(), key=lambda x: int(x[0])))
 
