@@ -29,6 +29,21 @@ exports.AccessToken_Test = function (test) {
   test.done();
 };
 
+// test uid = 0
+exports.AccessToken_Test2 = function (test) {
+  var expected = "006970CA35de60c44645bbae8a215061b33IACw1o7htY6ISdNRtku3p9tjTPi0jCKf9t49UHJhzCmL6bdIfRAAAAAAEAABAAAAR/QQAAEAAQCvKDdW";
+
+  var uid_zero = 0;
+  var key = new AccessToken.AccessToken(appID, appCertificate, channel, uid_zero);
+  key.salt = salt;
+  key.ts = ts;
+  key.messages[Priviledges.kJoinChannel] = expireTimestamp;
+
+  var actual = key.build();
+  test.equal(expected, actual);
+  test.done();
+};
+
 exports.SimpleTokenBuilder_Test = function (test) {
   var expected = "006970CA35de60c44645bbae8a215061b33IACV0fZUBw+72cVoL9eyGGh3Q6Poi8bgjwVLnyKSJyOXR7dIfRBXoFHlEAABAAAAR/QQAAEAAQCvKDdW";
 

@@ -52,7 +52,11 @@ public class AccessToken {
         this.appId = appId;
         this.appCertificate = appCertificate;
         this.channelName = channelName;
-        this.uid = String.valueOf(uid);
+        if (uid == 0){
+            this.uid = "";
+        }else {
+            this.uid = String.valueOf(uid);
+        }
 
         this.crcChannelName = 0;
         this.crcUid = 0;

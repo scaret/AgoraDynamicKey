@@ -68,6 +68,10 @@ func (builder *SimpleTokenBuilder) InitPrivileges(role Role) {
 	}
 }
 
+func (builder *SimpleTokenBuilder) InitTokenBuilder(originToken string) bool {
+	return builder.Token.FromString(originToken)
+}
+
 func (builder *SimpleTokenBuilder) SetPrivilege(privilege AccessToken.Privileges, expireTimestamp uint32) {
 	pri := uint16(privilege)
 	builder.Token.Message[pri] = expireTimestamp

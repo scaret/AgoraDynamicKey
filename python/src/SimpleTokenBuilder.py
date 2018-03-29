@@ -59,6 +59,9 @@ class SimpleTokenBuilder:
     def initPrivileges(self, role) :
 	    self.token.messages = RolePrivileges[role]
 
+    def initTokenBuilder(self, originToken) :
+		return self.token.fromString(originToken)
+
     def setPrivilege(self, privilege, expireTimestamp) :
 	    self.token.messages[privilege] = expireTimestamp
 

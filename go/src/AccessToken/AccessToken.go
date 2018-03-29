@@ -15,6 +15,9 @@ import (
 	"hash/crc32"
 )
 
+const VERSION_LENGTH = 3
+const APP_ID_LENGTH = 32
+
 type Privileges uint16
 const (
 	KJoinChannel = 1
@@ -42,6 +45,10 @@ type AccessToken struct {
 	Ts  uint32
 	Salt uint32
 	Message map[uint16]uint32
+	Signature string
+	CrcChannelName uint32
+	CrcUid uint32
+	MsgRawContent string
 }
 
 func random(min int, max int) int {
@@ -49,12 +56,63 @@ func random(min int, max int) int {
     return rand.Intn(max-min) + min
 }
 
+func panichandler() {
+	if r := recover(); r != nil {
+		fmt.Println("error: ", r)
+	}
+}
+
+func getVersion() string {
+	return "006"
+}
+
 func CreateAccessToken(appID, appCertificate, channelName string, uid uint32) AccessToken {
-	uidStr := fmt.Sprintf("%d", uid)
+	var uidStr string
+	if (uid == 0) {
+		uidStr = ""
+	} else {
+		uidStr = fmt.Sprintf("%d", uid)
+	}
 	ts := uint32(time.Now().Unix()) + 24 * 3600
 	salt := uint32(random(1, 99999999))
 	message := make(map[uint16]uint32)
-    return AccessToken{appID, appCertificate, channelName, uidStr, ts, salt, message}
+    return AccessToken{appID, appCertificate, channelName, uidStr, ts, salt, message, "", 0, 0, ""}
+}
+
+func (token *AccessToken) FromString(originToken string) bool {
+	defer panichandler()
+	
+	dk6version := getVersion()
+	originVersion := originToken[:VERSION_LENGTH]
+	if(originVersion != dk6version) {
+		return false
+	}
+
+	//originAppID := originToken[VERSION_LENGTH:(VERSION_LENGTH + APP_ID_LENGTH)]
+	originContent := originToken[(VERSION_LENGTH + APP_ID_LENGTH):]
+	originContentDecoded, err := base64.StdEncoding.DecodeString(originContent)
+	if err != nil {
+		return false
+	}
+
+	signature_, crc_channel_name_, crc_uid_, msg_raw_content_, err := unPackContent(originContentDecoded)
+	if err != nil {
+		return false
+	}
+	token.Signature = signature_
+	token.CrcChannelName = crc_channel_name_
+	token.CrcUid = crc_uid_
+	token.MsgRawContent = msg_raw_content_
+	
+	salt_, ts_, messages_, err := unPackMessages(token.MsgRawContent)
+	if err != nil {
+		return false
+	}
+	token.Salt = salt_
+	token.Ts = ts_
+	token.Message = messages_
+
+	return true
 }
 
 func (token *AccessToken) AddPrivilege(privilege Privileges, expireTimestamp uint32) {
@@ -64,7 +122,7 @@ func (token *AccessToken) AddPrivilege(privilege Privileges, expireTimestamp uin
 
 func (token *AccessToken) Build() (string, error) {
 	ret := ""
-	version := "006"
+	version := getVersion()
 
 	buf_m := new(bytes.Buffer)
 	if err := packUint32(buf_m, token.Salt); err != nil {
@@ -183,4 +241,84 @@ func packMapUint32(w io.Writer, extra map[uint16]uint32) error {
 	return nil
 }
 
+func unPackUint16(r io.Reader) (uint16, error) {
+	var n uint16
+	err := binary.Read(r, binary.LittleEndian, &n)
+	return n, err
+}
+
+func unPackUint32(r io.Reader) (uint32, error) {
+	var n uint32
+	err := binary.Read(r, binary.LittleEndian, &n)
+	return n, err
+}
+
+func unPackString(r io.Reader) (string, error) {
+	n, err := unPackUint16(r)
+	if err != nil {
+		return "", err
+	}
+
+	buf := make([]byte, n)
+	r.Read(buf)
+	s := string(buf[:])
+	return s, err
+}
+
+func unPackContent(buff []byte) (string, uint32, uint32, string, error) {
+	in := bytes.NewReader(buff)
+	sig, err := unPackString(in)
+	if err != nil {
+		return "", 0, 0, "", err
+	}
+	
+	crc_channel_name, err := unPackUint32(in)
+	if err != nil {
+		return "", 0, 0, "", err
+	}
+	crc_uid, err := unPackUint32(in)
+	if err != nil {
+		return "", 0, 0, "", err
+	}
+	m, err := unPackString(in)
+	if err != nil {
+		return "", 0, 0, "", err
+	}
+	
+	return sig, crc_channel_name, crc_uid, m, nil
+}
+
+func unPackMessages(msg_str string) (uint32, uint32, map[uint16]uint32, error) {
+	msg_map := make(map[uint16]uint32)
+
+	msg_byte := []byte(msg_str)
+	in := bytes.NewReader(msg_byte)
+
+	salt, err := unPackUint32(in)
+	if err != nil {
+		return 0, 0, msg_map, err
+	}
+	ts, err := unPackUint32(in)
+	if err != nil {
+		return 0, 0, msg_map, err
+	}
+	
+	len, err := unPackUint16(in)
+	if err != nil {
+		return 0, 0, msg_map, err
+	}
+	for i := uint16(0); i < len; i++ {
+		key, err := unPackUint16(in)
+		if err != nil {
+			return 0, 0, msg_map, err
+		}
+		value, err := unPackUint32(in)
+		if err != nil {
+			return 0, 0, msg_map, err
+		}
+		msg_map[key] = value
+	}
+
+	return salt, ts, msg_map, nil
+}
 
