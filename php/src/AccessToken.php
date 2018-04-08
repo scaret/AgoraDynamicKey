@@ -70,9 +70,8 @@ class Message
 
 class AccessToken
 {
-    protected $appID, $appCertificate, $channelName, $uid;
+    public $appID, $appCertificate, $channelName, $uid;
     public $message;
-    protected $crc_channel_name, $crc_uid, $sig;
 
     public function __construct($appID, $appCertificate, $channelName, $uid)
     {
@@ -80,22 +79,21 @@ class AccessToken
         $this->appCertificate = $appCertificate;
         $this->channelName = $channelName;
 
+        $this->setUid($uid);
+        $this->message = new Message();
+    }
+
+    public function setUid($uid){
         if($uid === 0){
             $this->uid = "";
         } else {
             $this->uid = $uid . '';
         }
-
-        $this->message = new Message();
-
-        $this->sig = NULL;
-        $this->crc_channel_name = NULL;
-        $this->crc_uid = NULL;
     }
 
-    public static function initWithToken($token){
+    public static function initWithToken($token, $appCertificate, $channel, $uid){
         $accessToken = new AccessToken("", "", "", "");
-        $accessToken->extract($token);
+        $accessToken->extract($token, $appCertificate, $channel, $uid);
         return $accessToken;
     }
 
@@ -105,7 +103,7 @@ class AccessToken
         return $this;
     }
 
-    protected function extract($token){
+    protected function extract($token, $appCertificate, $channelName, $uid){
         $ver_len = 3;
         $appid_len = 32;
         $version = substr($token, 0, $ver_len);
@@ -137,9 +135,9 @@ class AccessToken
 
 
         //non reversable values
-        $this->sig = $sig;
-        $this->crc_channel_name = $crc_channel;
-        $this->crc_uid = $crc_uid;
+        $this->appCertificate = $appCertificate;
+        $this->channelName = $channelName;
+        $this->setUid($uid);
     }
 
     public function build()
@@ -149,23 +147,10 @@ class AccessToken
         
         $sig = NULL; $crc_channel_name = NULL; $crc_uid = NULL;
         //use sig if created from extraction
-        if(is_null($this->sig)){
-            $sig = hash_hmac('sha256', implode(array_map("chr", $val)), $this->appCertificate, true);
-        } else {
-            $sig = $this->sig;
-        }
+        $sig = hash_hmac('sha256', implode(array_map("chr", $val)), $this->appCertificate, true);
 
-        if(is_null($this->crc_channel_name)){
-            $crc_channel_name = crc32($this->channelName) & 0xffffffff;
-        } else {
-            $crc_channel_name = $this->crc_channel_name;
-        }
-
-        if(is_null($this->crc_channel_name)){
-            $crc_uid = crc32($this->uid) & 0xffffffff;
-        } else {
-            $crc_uid = $this->crc_uid;
-        }
+        $crc_channel_name = crc32($this->channelName) & 0xffffffff;
+        $crc_uid = crc32($this->uid) & 0xffffffff;
 
         $content = array_merge(unpack("C*", packString($sig)), unpack("C*", pack("V", $crc_channel_name)), unpack("C*", pack("V", $crc_uid)), unpack("C*", pack("v", count($msg))), $msg);
         $version = "006";
