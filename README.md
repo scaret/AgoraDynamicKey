@@ -15,7 +15,7 @@ Sample usage,
 AccessToken a(appID, appCertificate, channelName, uid);
 a.AddPrivilege(AccessToken::kJoinChannel);
 a.AddPrivilege(AccessToken::kPublishAudioStream);
-std::string token = key.Build();
+std::string token = a.Build();
 ```
 Sample Code for generating AccessToken are available on the following platforms:
 
