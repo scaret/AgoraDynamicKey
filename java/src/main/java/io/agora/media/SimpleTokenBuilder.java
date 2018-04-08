@@ -6,65 +6,60 @@ import static io.agora.media.AccessToken.Privileges.*;
 import static io.agora.media.SimpleTokenBuilder.Role.*;
 
 public class SimpleTokenBuilder {
-    private String appId;
-    private String appCertificate;
-    private String channelName;
-    private String uid;
+    public AccessToken mTokenCreator;
 
-    private AccessToken mTokenCreator;
+    public static TreeMap<Short, Integer> attendeePrivileges = new TreeMap<Short, Integer>();
 
-    public static TreeMap<Short, Integer> attendeePrivileges = new TreeMap<Short, Integer>() {
-        {
-            attendeePrivileges.put(kJoinChannel.intValue, 0);
-            attendeePrivileges.put(kPublishAudioStream.intValue, 0);
-            attendeePrivileges.put(kPublishVideoStream.intValue, 0);
-            attendeePrivileges.put(kPublishDataStream.intValue, 0);
-        }
-    };
+    static {
+        attendeePrivileges.put(kJoinChannel.intValue, 0);
+        attendeePrivileges.put(kPublishAudioStream.intValue, 0);
+        attendeePrivileges.put(kPublishVideoStream.intValue, 0);
+        attendeePrivileges.put(kPublishDataStream.intValue, 0);
+    }
 
-    public static TreeMap<Short, Integer> publisherPrivileges = new TreeMap<Short, Integer>() {
-        {
-            attendeePrivileges.put(kJoinChannel.intValue, 0);
-            attendeePrivileges.put(kPublishAudioStream.intValue, 0);
-            attendeePrivileges.put(kPublishVideoStream.intValue, 0);
-            attendeePrivileges.put(kPublishDataStream.intValue, 0);
-            attendeePrivileges.put(kPublishAudiocdn.intValue, 0);
-            attendeePrivileges.put(kPublishVideoCdn.intValue, 0);
-            attendeePrivileges.put(kInvitePublishAudioStream.intValue, 0);
-            attendeePrivileges.put(kInvitePublishVideoStream.intValue, 0);
-            attendeePrivileges.put(kInvitePublishDataStream.intValue, 0);
-        }
-    };
+    public static TreeMap<Short, Integer> publisherPrivileges = new TreeMap<Short, Integer>();
 
-    public static TreeMap<Short, Integer> subscriberPrivileges = new TreeMap<Short, Integer>() {
-        {
-            attendeePrivileges.put(kJoinChannel.intValue, 0);
-            attendeePrivileges.put(kRequestPublishAudioStream.intValue, 0);
-            attendeePrivileges.put(kRequestPublishVideoStream.intValue, 0);
-            attendeePrivileges.put(kRequestPublishDataStream.intValue, 0);
-        }
-    };
+    static {
+        publisherPrivileges.put(kJoinChannel.intValue, 0);
+        publisherPrivileges.put(kPublishAudioStream.intValue, 0);
+        publisherPrivileges.put(kPublishVideoStream.intValue, 0);
+        publisherPrivileges.put(kPublishDataStream.intValue, 0);
+        publisherPrivileges.put(kPublishAudiocdn.intValue, 0);
+        publisherPrivileges.put(kPublishVideoCdn.intValue, 0);
+        publisherPrivileges.put(kInvitePublishAudioStream.intValue, 0);
+        publisherPrivileges.put(kInvitePublishVideoStream.intValue, 0);
+        publisherPrivileges.put(kInvitePublishDataStream.intValue, 0);
+    }
 
-    public static TreeMap<Short, Integer> adminPrivileges = new TreeMap<Short, Integer>() {
-        {
-            attendeePrivileges.put(kJoinChannel.intValue, 0);
-            attendeePrivileges.put(kPublishAudioStream.intValue, 0);
-            attendeePrivileges.put(kPublishVideoStream.intValue, 0);
-            attendeePrivileges.put(kPublishDataStream.intValue, 0);
-            attendeePrivileges.put(kAdministrateChannel.intValue, 0);
-        }
-    };
+    public static TreeMap<Short, Integer> subscriberPrivileges = new TreeMap<Short, Integer>();
 
-    public static TreeMap<Integer, TreeMap<Short, Integer>> gRolePrivileges = new TreeMap<Integer, TreeMap<Short, Integer>>() {
-        {
-            gRolePrivileges.put(Role_Attendee.initValue, attendeePrivileges);
-            gRolePrivileges.put(Role_Publisher.initValue, publisherPrivileges);
-            gRolePrivileges.put(Role_Subscriber.initValue, subscriberPrivileges);
-            gRolePrivileges.put(Role_Admin.initValue, adminPrivileges);
-        }
-    };
+    static {
+        subscriberPrivileges.put(kJoinChannel.intValue, 0);
+        subscriberPrivileges.put(kRequestPublishAudioStream.intValue, 0);
+        subscriberPrivileges.put(kRequestPublishVideoStream.intValue, 0);
+        subscriberPrivileges.put(kRequestPublishDataStream.intValue, 0);
+    }
 
-    enum Role {
+    public static TreeMap<Short, Integer> adminPrivileges = new TreeMap<Short, Integer>();
+
+    static {
+        adminPrivileges.put(kJoinChannel.intValue, 0);
+        adminPrivileges.put(kPublishAudioStream.intValue, 0);
+        adminPrivileges.put(kPublishVideoStream.intValue, 0);
+        adminPrivileges.put(kPublishDataStream.intValue, 0);
+        adminPrivileges.put(kAdministrateChannel.intValue, 0);
+    }
+
+    public static TreeMap<Integer, TreeMap<Short, Integer>> gRolePrivileges = new TreeMap<Integer, TreeMap<Short, Integer>>();
+
+    static {
+        gRolePrivileges.put(Role_Attendee.initValue, attendeePrivileges);
+        gRolePrivileges.put(Role_Publisher.initValue, publisherPrivileges);
+        gRolePrivileges.put(Role_Subscriber.initValue, subscriberPrivileges);
+        gRolePrivileges.put(Role_Admin.initValue, adminPrivileges);
+    }
+
+    public enum Role {
         Role_Attendee(0),  // for communication
         Role_Publisher(1), // for live broadcast
         Role_Subscriber(2),  // for live broadcast
@@ -78,10 +73,10 @@ public class SimpleTokenBuilder {
     }
 
     public SimpleTokenBuilder(String appId, String appCertificate, String channelName, String uid) {
-        this.appId = appId;
-        this.appCertificate = appCertificate;
-        this.channelName = channelName;
-        this.uid = uid;
+        mTokenCreator = new AccessToken(appId, appCertificate, channelName, uid);
+    }
+
+    public SimpleTokenBuilder(String appId, String appCertificate, String channelName, int uid) {
         mTokenCreator = new AccessToken(appId, appCertificate, channelName, uid);
     }
 

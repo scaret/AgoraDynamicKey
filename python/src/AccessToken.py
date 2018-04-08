@@ -22,22 +22,25 @@ kInvitePublishVideoStream = 11
 kInvitePublishDataStream = 12
 kAdministrateChannel = 101
 
+VERSION_LENGTH = 3
+APP_ID_LENGTH = 32
+
+
+def getVersion():
+    return '006'
+    
 
 def packUint16(x):
     return struct.pack('<H', int(x))
 
-
 def packUint32(x):
     return struct.pack('<I', int(x))
-
 
 def packInt32(x):
     return struct.pack('<i', int(x))
 
-
 def packString(string):
     return packUint16(len(string)) + string
-
 
 def packMap(m):
     ret = packUint16(len(m.items()))
@@ -45,12 +48,67 @@ def packMap(m):
         ret += packUint16(k) + packString(v)
     return ret
 
-
 def packMapUint32(m):
     ret = packUint16(len(m.items()))
     for k, v in m.items():
         ret += packUint16(k) + packUint32(v)
     return ret
+
+
+class ReadByteBuffer:
+
+    def __init__(self, bytes):
+        self.buffer = bytes
+        self.position = 0
+    
+    def unPackUint16(self):
+        len = struct.calcsize('H')
+        buff = self.buffer[self.position : self.position + len]
+        ret = struct.unpack('<H', buff)[0]
+        self.position += len
+        return ret
+
+    def unPackUint32(self):
+        len = struct.calcsize('I')
+        buff = self.buffer[self.position : self.position + len]
+        ret = struct.unpack('<I', buff)[0]
+        self.position += len
+        return ret
+
+    def unPackString(self):
+        strlen = self.unPackUint16()
+        buff = self.buffer[self.position : self.position + strlen]
+        ret = struct.unpack('<'+str(strlen)+'s', buff)[0]
+        self.position += strlen
+        return ret
+
+    def unPackMapUint32(self):
+        messages = {}
+        maplen = self.unPackUint16()
+
+        for index in range(maplen):
+            key = self.unPackUint16()
+            value = self.unPackUint32()
+            messages[key] = value
+        return messages
+    
+
+def unPackContent(buff):
+    readbuf = ReadByteBuffer(buff)
+    signature = readbuf.unPackString()
+    crc_channel_name = readbuf.unPackUint32()
+    crc_uid = readbuf.unPackUint32()
+    m = readbuf.unPackString()
+    
+    return signature, crc_channel_name, crc_uid, m 
+
+def unPackMessages(buff):
+    readbuf = ReadByteBuffer(buff)
+    salt = readbuf.unPackUint32()
+    ts = readbuf.unPackUint32()
+    messages = readbuf.unPackMapUint32()
+
+    return salt, ts, messages
 
 
 class AccessToken:
@@ -60,13 +118,36 @@ class AccessToken:
         self.appID = appID
         self.appCertificate = appCertificate
         self.channelName = channelName
-        self.uidStr = str(uid)
         self.ts = int(time.time()) + 24 * 3600
         self.salt = random.randint(1, 99999999)
         self.messages = {}
+        if (uid == 0):
+            self.uidStr = ""
+        else:
+            self.uidStr = str(uid)
 
-    def AddPrivilege(self, privilege, expireTimestamp):
+    def addPrivilege(self, privilege, expireTimestamp):
         self.messages[privilege] = expireTimestamp
+
+    def fromString(self, originToken):
+        try:
+            dk6version = getVersion()
+            originVersion = originToken[:VERSION_LENGTH]
+            if(originVersion != dk6version):
+                return False
+
+            originAppID = originToken[VERSION_LENGTH:(VERSION_LENGTH + APP_ID_LENGTH)]
+            originContent = originToken[(VERSION_LENGTH + APP_ID_LENGTH):]
+            originContentDecoded = base64.b64decode(originContent)
+
+            signature, crc_channel_name, crc_uid, m = unPackContent(originContentDecoded)
+            self.salt, self.ts, self.messages = unPackMessages(m)
+
+        except Exception, e:
+            print "error:", str(e)
+            return False
+
+        return True
 
     def build(self):
 
@@ -85,6 +166,6 @@ class AccessToken:
             + packUint32(crc_uid) \
             + packString(m)
 
-        version = '{0:0>3}'.format(6)
+        version = getVersion()
         ret = version + self.appID + base64.b64encode(content)
         return ret

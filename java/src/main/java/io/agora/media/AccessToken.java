@@ -48,6 +48,22 @@ public class AccessToken {
         this(appId, appCertificate, channelName, "");
     }
 
+    public AccessToken(String appId, String appCertificate, String channelName, int uid) {
+        this.appId = appId;
+        this.appCertificate = appCertificate;
+        this.channelName = channelName;
+        if (uid == 0){
+            this.uid = "";
+        }else {
+            this.uid = String.valueOf(uid);
+        }
+
+        this.crcChannelName = 0;
+        this.crcUid = 0;
+
+        this.message = new PrivilegeMessage();
+    }
+
     public AccessToken(String appId, String appCertificate, String channelName, String uid) {
         this.appId = appId;
         this.appCertificate = appCertificate;
