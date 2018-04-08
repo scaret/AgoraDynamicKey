@@ -19,6 +19,9 @@ $builder->addPrivilege($Privileges["kJoinChannel"], $expiredTs);
 $result = $builder->build();
 
 assertEqual($expected, $result);
+$builder2 = AccessToken::initWithToken($expected);
+$result2 = $builder2->build();
+assertEqual($expected, $result2);
 
 
 //test 2 uid 0 case
@@ -40,6 +43,9 @@ $builder->addPrivilege($Privileges["kJoinChannel"], $expiredTs);
 $result = $builder->build();
 
 assertEqual($expected, $result);
+$builder2 = AccessToken::initWithToken($expected);
+$result2 = $builder2->build();
+assertEqual($expected, $result2);
 
 
 //test 2 uid 0 number case
@@ -61,6 +67,8 @@ $builder->addPrivilege($Privileges["kJoinChannel"], $expiredTs);
 $result = $builder->build();
 
 assertEqual($expected, $result);
-
+$builder2 = AccessToken::initWithToken($expected);
+$result2 = $builder2->build();
+assertEqual($expected, $result2);
 
 ?>

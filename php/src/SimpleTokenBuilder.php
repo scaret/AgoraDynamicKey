@@ -59,6 +59,9 @@ class SimpleTokenBuilder
     public function __construct($appID, $appCertificate, $channelName, $uid){
         $this->token = new AccessToken($appID, $appCertificate, $channelName, $uid);
     }
+    public static function initWithToken($token){
+        $this->token = AccessToken::initWithToken($token);
+    }
     public function initPrivilege($role){
         $p = $RolePrivileges[$role];
         foreach($p as $key => $value){
