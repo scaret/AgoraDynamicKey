@@ -73,14 +73,8 @@ class AccessToken
     public $appID, $appCertificate, $channelName, $uid;
     public $message;
 
-    public function __construct($appID, $appCertificate, $channelName, $uid)
+    public function __construct()
     {
-        $this->appID = $appID;
-        $this->appCertificate = $appCertificate;
-        $this->channelName = $channelName;
-
-        $this->setUid($uid);
-        $this->message = new Message();
     }
 
     public function setUid($uid){
@@ -91,9 +85,38 @@ class AccessToken
         }
     }
 
+    public function is_nonempty_string($name, $str){
+        if(is_string($str) && $str !== ""){
+            return true;
+        }
+        echo $name. " check failed, should be a non-empty string";
+        return false;
+    }
+
+    public static function init($appID, $appCertificate, $channelName, $uid){
+        $accessToken = new AccessToken();
+
+        if(!$accessToken->is_nonempty_string("appID", $appID) || 
+            !$accessToken->is_nonempty_string("appCertificate", $appCertificate) ||
+            !$accessToken->is_nonempty_string("channelName", $channelName)){
+            return null;
+        }
+
+        $accessToken->appID = $appID;
+        $accessToken->appCertificate = $appCertificate;
+        $accessToken->channelName = $channelName;
+
+        $accessToken->setUid($uid);
+        $accessToken->message = new Message();
+        return $accessToken;
+    }
+
+
     public static function initWithToken($token, $appCertificate, $channel, $uid){
-        $accessToken = new AccessToken("", "", "", "");
-        $accessToken->extract($token, $appCertificate, $channel, $uid);
+        $accessToken = new AccessToken();
+        if(!$accessToken->extract($token, $appCertificate, $channel, $uid)){
+            return null;
+        }
         return $accessToken;
     }
 
@@ -109,7 +132,13 @@ class AccessToken
         $version = substr($token, 0, $ver_len);
         if($version !== "006" ){
             echo 'invalid version '.$version;
-            return;
+            return false;
+        }
+
+        if(!$this->is_nonempty_string("token", $token) || 
+            !$this->is_nonempty_string("appCertificate", $appCertificate) ||
+            !$this->is_nonempty_string("channelName", $channelName)){
+            return false;
         }
 
         $appid = substr($token, $ver_len, $appid_len);
@@ -138,6 +167,7 @@ class AccessToken
         $this->appCertificate = $appCertificate;
         $this->channelName = $channelName;
         $this->setUid($uid);
+        return true;
     }
 
     public function build()
