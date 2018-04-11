@@ -175,7 +175,6 @@ class AccessToken
         $msg = $this->message->packContent();
         $val = array_merge(unpack("C*", $this->appID), unpack("C*", $this->channelName), unpack("C*", $this->uid), $msg);
         
-        //use sig if created from extraction
         $sig = hash_hmac('sha256', implode(array_map("chr", $val)), $this->appCertificate, true);
 
         $crc_channel_name = crc32($this->channelName) & 0xffffffff;
