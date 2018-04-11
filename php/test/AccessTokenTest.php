@@ -12,13 +12,16 @@ $expiredTs = 1446455471;
 
 
 $expected = "006970CA35de60c44645bbae8a215061b33IACV0fZUBw+72cVoL9eyGGh3Q6Poi8bgjwVLnyKSJyOXR7dIfRBXoFHlEAABAAAAR/QQAAEAAQCvKDdW";
-$builder = new AccessToken($appID, $appCertificate, $channelName, $uid);
+$builder = AccessToken::init($appID, $appCertificate, $channelName, $uid);
 $builder->message->salt = $salt;
 $builder->message->ts = $ts;
 $builder->addPrivilege($Privileges["kJoinChannel"], $expiredTs);
 $result = $builder->build();
 
 assertEqual($expected, $result);
+$builder2 = AccessToken::initWithToken($expected, $appCertificate, $channelName, $uid);
+$result2 = $builder2->build();
+assertEqual($expected, $result2);
 
 
 //test 2 uid 0 case
@@ -33,13 +36,16 @@ $expiredTs = 1446455471;
 
 
 $expected = "006970CA35de60c44645bbae8a215061b33IABNRUO/126HmzFc+J8lQFfnkssUdUXqiePeE2WNZ7lyubdIfRAh39v0EAABAAAAR/QQAAEAAQCvKDdW";
-$builder = new AccessToken($appID, $appCertificate, $channelName, $uid);
+$builder = AccessToken::init($appID, $appCertificate, $channelName, $uid);
 $builder->message->salt = $salt;
 $builder->message->ts = $ts;
 $builder->addPrivilege($Privileges["kJoinChannel"], $expiredTs);
 $result = $builder->build();
 
 assertEqual($expected, $result);
+$builder2 = AccessToken::initWithToken($expected, $appCertificate, $channelName, $uid);
+$result2 = $builder2->build();
+assertEqual($expected, $result2);
 
 
 //test 2 uid 0 number case
@@ -54,13 +60,22 @@ $expiredTs = 1446455471;
 
 
 $expected = "006970CA35de60c44645bbae8a215061b33IACw1o7htY6ISdNRtku3p9tjTPi0jCKf9t49UHJhzCmL6bdIfRAAAAAAEAABAAAAR/QQAAEAAQCvKDdW";
-$builder = new AccessToken($appID, $appCertificate, $channelName, $uid);
+$builder = AccessToken::init($appID, $appCertificate, $channelName, $uid);
 $builder->message->salt = $salt;
 $builder->message->ts = $ts;
 $builder->addPrivilege($Privileges["kJoinChannel"], $expiredTs);
 $result = $builder->build();
 
 assertEqual($expected, $result);
+$builder2 = AccessToken::initWithToken($expected, $appCertificate, $channelName, $uid);
+$result2 = $builder2->build();
+assertEqual($expected, $result2);
 
+
+$appID = "";
+//invalid values
+$expected = "006970CA35de60c44645bbae8a215061b33IACw1o7htY6ISdNRtku3p9tjTPi0jCKf9t49UHJhzCmL6bdIfRAAAAAAEAABAAAAR/QQAAEAAQCvKDdW";
+$builder = AccessToken::init($appID, $appCertificate, $channelName, $uid);
+assertEqual($builder, NULL);
 
 ?>
