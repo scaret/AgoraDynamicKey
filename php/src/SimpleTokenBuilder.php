@@ -57,7 +57,11 @@ class SimpleTokenBuilder
 {
     private $token;
     public function __construct($appID, $appCertificate, $channelName, $uid){
-        $this->token = new AccessToken($appID, $appCertificate, $channelName, $uid);
+        $this->token = new AccessToken();
+        $this->token->appID = $appID;
+        $this->token->appCertificate = $appCertificate;
+        $this->token->channelName = $channelName;
+        $this->token->setUid($uid);
     }
     public static function initWithToken($token, $appCertificate, $channel, $uid){
         $this->token = AccessToken::initWithToken($token, $appCertificate, $channel, $uid);
