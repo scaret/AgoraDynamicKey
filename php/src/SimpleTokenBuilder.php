@@ -55,7 +55,7 @@ $RolePrivileges = array(
 
 class SimpleTokenBuilder
 {
-    private $token;
+    public $token;
     public function __construct($appID, $appCertificate, $channelName, $uid){
         $this->token = new AccessToken();
         $this->token->appID = $appID;
