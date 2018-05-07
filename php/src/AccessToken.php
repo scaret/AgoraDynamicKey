@@ -75,6 +75,7 @@ class AccessToken
 
     public function __construct()
     {
+        $this->message = new Message();
     }
 
     public function setUid($uid){
