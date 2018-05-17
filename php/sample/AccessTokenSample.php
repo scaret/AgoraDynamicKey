@@ -9,7 +9,8 @@ $expireTimestamp = 0;
 
 
 $builder = new AccessToken();
-$builder->addPrivilege(Constants::Privileges["kJoinChannel"], $expireTimestamp);
+$builder->init($appID, $appCertificate, $channelName, $uid);
+$builder->addPrivilege(AccessToken::Privileges["kJoinChannel"], $expireTimestamp);
 echo $builder->build();
 
 ?>

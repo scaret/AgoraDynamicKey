@@ -16,7 +16,7 @@ class SimpleTokenBuilder
         $this->token = AccessToken::initWithToken($token, $appCertificate, $channel, $uid);
     }
     public function initPrivilege($role){
-        $p = Constants::RolePrivileges[$role];
+        $p = AccessToken::RolePrivileges[$role];
         foreach($p as $key => $value){
             $this->setPrivilege($key, $value);
         }
