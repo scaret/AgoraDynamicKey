@@ -15,7 +15,7 @@ $expected = "006970CA35de60c44645bbae8a215061b33IACV0fZUBw+72cVoL9eyGGh3Q6Poi8bg
 $builder = AccessToken::init($appID, $appCertificate, $channelName, $uid);
 $builder->message->salt = $salt;
 $builder->message->ts = $ts;
-$builder->addPrivilege($Privileges["kJoinChannel"], $expiredTs);
+$builder->addPrivilege(Constants::Privileges["kJoinChannel"], $expiredTs);
 $result = $builder->build();
 
 assertEqual($expected, $result);
@@ -39,7 +39,7 @@ $expected = "006970CA35de60c44645bbae8a215061b33IABNRUO/126HmzFc+J8lQFfnkssUdUXq
 $builder = AccessToken::init($appID, $appCertificate, $channelName, $uid);
 $builder->message->salt = $salt;
 $builder->message->ts = $ts;
-$builder->addPrivilege($Privileges["kJoinChannel"], $expiredTs);
+$builder->addPrivilege(Constants::Privileges["kJoinChannel"], $expiredTs);
 $result = $builder->build();
 
 assertEqual($expected, $result);
@@ -63,7 +63,7 @@ $expected = "006970CA35de60c44645bbae8a215061b33IACw1o7htY6ISdNRtku3p9tjTPi0jCKf
 $builder = AccessToken::init($appID, $appCertificate, $channelName, $uid);
 $builder->message->salt = $salt;
 $builder->message->ts = $ts;
-$builder->addPrivilege($Privileges["kJoinChannel"], $expiredTs);
+$builder->addPrivilege(Constants::Privileges["kJoinChannel"], $expiredTs);
 $result = $builder->build();
 
 assertEqual($expected, $result);
@@ -84,7 +84,7 @@ $builder = new SimpleTokenBuilder($appID, $appCertificate, $channelName, $uid);
 $builder->token->message->ts = 1111111;
 $builder->token->message->salt = 1;
 $builder->token->setUid(2882341273);
-$builder->setPrivilege($Privileges["kJoinChannel"], $expiredTs);
+$builder->setPrivilege(Constants::Privileges["kJoinChannel"], $expiredTs);
 $result = $builder->buildToken();
 assertEqual($expected, $result);
 
