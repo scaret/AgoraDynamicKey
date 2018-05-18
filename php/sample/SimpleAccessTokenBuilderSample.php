@@ -7,7 +7,7 @@ $channelName = "7d72365eb983485397e3e3f9d460bdda";
 $uid = 2882341273;
 
 $builder = new SimpleTokenBuilder($appID, $appCertificate, $channelName, $uid);
-$builder->initPrivilege(AccessToken::Role["kRoleAdmin"]);
+$builder->initPrivilege(SimpleTokenBuilder::Role["kRoleAdmin"]);
 echo $builder->buildToken();
 
 ?>

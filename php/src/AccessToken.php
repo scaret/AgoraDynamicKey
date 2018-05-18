@@ -70,55 +70,6 @@ class AccessToken
         "kAdministrateChannel" => 101
     );
 
-    const Role = array(
-        "kRoleAttendee" => 0,  // for communication
-        "kRolePublisher" => 1, // for live broadcast
-        "kRoleSubscriber" => 2,  // for live broadcast
-        "kRoleAdmin" => 101
-    );
-
-    const AttendeePrivileges = array(
-        self::Privileges["kJoinChannel"] => 0,
-        self::Privileges["kPublishAudioStream"] => 0,
-        self::Privileges["kPublishVideoStream"] => 0,
-        self::Privileges["kPublishDataStream"] => 0
-    );
-    
-    
-    const PublisherPrivileges = array(
-        self::Privileges["kJoinChannel"] => 0,
-        self::Privileges["kPublishAudioStream"] => 0,
-        self::Privileges["kPublishVideoStream"] => 0,
-        self::Privileges["kPublishDataStream"] => 0,
-        self::Privileges["kPublishAudioCdn"] => 0,
-        self::Privileges["kPublishVideoCdn"] => 0,
-        self::Privileges["kInvitePublishAudioStream"] => 0,
-        self::Privileges["kInvitePublishVideoStream"] => 0,
-        self::Privileges["kInvitePublishDataStream"] => 0
-    );
-    
-    const SubscriberPrivileges = array(
-        self::Privileges["kJoinChannel"] => 0,
-        self::Privileges["kRequestPublishAudioStream"] => 0,
-        self::Privileges["kRequestPublishVideoStream"] => 0,
-        self::Privileges["kRequestPublishDataStream"] => 0
-    );
-    
-    const AdminPrivileges = array(
-        self::Privileges["kJoinChannel"] => 0,
-        self::Privileges["kPublishAudioStream"] => 0,
-        self::Privileges["kPublishVideoStream"] => 0,
-        self::Privileges["kPublishDataStream"] => 0,
-        self::Privileges["kAdministrateChannel"] => 0
-    );
-    
-    const RolePrivileges = array(
-        self::Role["kRoleAttendee"] => self::AttendeePrivileges,
-        self::Role["kRolePublisher"] => self::PublisherPrivileges,
-        self::Role["kRoleSubscriber"] => self::SubscriberPrivileges,
-        self::Role["kRoleAdmin"] => self::AdminPrivileges
-    );
-
     public $appID, $appCertificate, $channelName, $uid;
     public $message;
 
