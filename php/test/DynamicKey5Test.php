@@ -13,7 +13,7 @@ include "TestTool.php";
     function testRecordingKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs)
     {   
         $expected = "005AgAoADkyOUM5RTQ2MTg3QTAyMkJBQUIyNkI3QkYwMTg0MzhDNjc1Q0ZFMUEQAJcMo13mDERkW7roohUGGzOwKDdW9buDA68oN1YAAA==";
-        $actual = generateRecordingKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs);
+        $actual = DynamicKey5::generateRecordingKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs);
 
         assertEqual($expected, $actual);
     }
@@ -22,22 +22,19 @@ include "TestTool.php";
     {   
         $expected = "005AQAoAEJERTJDRDdFNkZDNkU0ODYxNkYxQTYwOUVFNTM1M0U5ODNCQjFDNDQQAJcMo13mDERkW7roohUGGzOwKDdW9buDA68oN1YAAA==";
         
-        $actual = generateMediaChannelKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs);
+        $actual = DynamicKey5::generateMediaChannelKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs);
 
         assertEqual($expected, $actual);
     }
 
     function testInChannelPermission($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs)
     {
-        global $NO_UPLOAD;
-
         $noUpload = "005BAAoADgyNEQxNDE4M0FGRDkyOEQ4REFFMUU1OTg5NTg2MzA3MTEyNjRGNzQQAJcMo13mDERkW7roohUGGzOwKDdW9buDA68oN1YBAAEAAQAw";
-        $generatedNoUpload = generateInChannelPermissionKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $NO_UPLOAD);
+        $generatedNoUpload = DynamicKey5::generateInChannelPermissionKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, DynamicKey5::NO_UPLOAD);
         assertEqual($noUpload, $generatedNoUpload);
 
-        global $AUDIO_VIDEO_UPLOAD;
         $audioVideoUpload = "005BAAoADJERDA3QThENTE2NzJGNjQwMzY5NTFBNzE0QkI5NTc0N0Q1QjZGQjMQAJcMo13mDERkW7roohUGGzOwKDdW9buDA68oN1YBAAEAAQAz";
-        $generatedAudioVideoUpload = generateInChannelPermissionKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $AUDIO_VIDEO_UPLOAD);
+        $generatedAudioVideoUpload = DynamicKey5::generateInChannelPermissionKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, DynamicKey5::AUDIO_VIDEO_UPLOAD);
         assertEqual($audioVideoUpload, $generatedAudioVideoUpload);
     }
 

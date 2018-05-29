@@ -1,46 +1,49 @@
 <?php
-$version = "005";
-$NO_UPLOAD = "0";
-$AUDIO_VIDEO_UPLOAD = "3";
 
-// InChannelPermissionKey
-$ALLOW_UPLOAD_IN_CHANNEL = 1;
+class DynamicKey5
+{
 
-// Service Type
-$MEDIA_CHANNEL_SERVICE = 1;
-$RECORDING_SERVICE = 2;
-$PUBLIC_SHARING_SERVICE = 3;
-$IN_CHANNEL_PERMISSION = 4;
+    const version = "005";
+    const NO_UPLOAD = "0";
+    const AUDIO_VIDEO_UPLOAD = "3";
 
-    function generateRecordingKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs)
+    // InChannelPermissionKey
+    const ALLOW_UPLOAD_IN_CHANNEL = 1;
+
+    // Service Type
+    const MEDIA_CHANNEL_SERVICE = 1;
+    const RECORDING_SERVICE = 2;
+    const PUBLIC_SHARING_SERVICE = 3;
+    const IN_CHANNEL_PERMISSION = 4;
+    public static function generateRecordingKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs)
     {
-        return generateDynamicKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $GLOBALS["RECORDING_SERVICE"], array());
+        return DynamicKey5::generateDynamicKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, DynamicKey5::RECORDING_SERVICE, array());
     }
 
-    function generateMediaChannelKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs)
+    public static function generateMediaChannelKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs)
     {
-        return generateDynamicKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $GLOBALS["MEDIA_CHANNEL_SERVICE"], array());
+        return DynamicKey5::generateDynamicKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, DynamicKey5::MEDIA_CHANNEL_SERVICE, array());
     }
 
-    function generateInChannelPermissionKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $permission)
+    public static function generateInChannelPermissionKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $permission)
     {
-        $extra[$GLOBALS["ALLOW_UPLOAD_IN_CHANNEL"]] = $permission;
-        return generateDynamicKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $GLOBALS["IN_CHANNEL_PERMISSION"], $extra);
+        $extra[DynamicKey5::ALLOW_UPLOAD_IN_CHANNEL] = $permission;
+        return DynamicKey5::generateDynamicKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, DynamicKey5::IN_CHANNEL_PERMISSION, $extra);
     }
 
-    function generateDynamicKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $serviceType, $extra)
+    public static function generateDynamicKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $serviceType, $extra)
     {
-        $signature = generateSignature($serviceType, $appID, $appCertificate, $channelName, $uid, $ts, $randomInt, $expiredTs, $extra);
-        $content = packContent($serviceType, $signature, hex2bin($appID), $ts, $randomInt, $expiredTs, $extra);
+        $signature = DynamicKey5::generateSignature($serviceType, $appID, $appCertificate, $channelName, $uid, $ts, $randomInt, $expiredTs, $extra);
+        $content = DynamicKey5::packContent($serviceType, $signature, hex2bin($appID), $ts, $randomInt, $expiredTs, $extra);
         // echo bin2hex($content);
-        return $GLOBALS["version"] . base64_encode($content);
+        return DynamicKey5::version . base64_encode($content);
     }
 
-    function generateSignature($serviceType, $appID, $appCertificate, $channelName, $uid, $ts, $salt, $expiredTs, $extra)
+    public static function generateSignature($serviceType, $appID, $appCertificate, $channelName, $uid, $ts, $salt, $expiredTs, $extra)
     {
         $rawAppID = hex2bin($appID);
         $rawAppCertificate = hex2bin($appCertificate);
-        
+
         $buffer = pack("S", $serviceType);
         $buffer .= pack("S", strlen($rawAppID)) . $rawAppID;
         $buffer .= pack("I", $ts);
@@ -53,21 +56,21 @@ $IN_CHANNEL_PERMISSION = 4;
         foreach ($extra as $key => $value) {
             $buffer .= pack("S", $key);
             $buffer .= pack("S", strlen($value)) . $value;
-        } 
+        }
 
         return strtoupper(hash_hmac('sha1', $buffer, $rawAppCertificate));
     }
 
-    function packString($value)
+    public static function packString($value)
     {
         return pack("S", strlen($value)) . $value;
     }
 
-    function packContent($serviceType, $signature, $appID, $ts, $salt, $expiredTs, $extra)
+    public static function packContent($serviceType, $signature, $appID, $ts, $salt, $expiredTs, $extra)
     {
         $buffer = pack("S", $serviceType);
-        $buffer .= packString($signature);
-        $buffer .= packString($appID);
+        $buffer .= DynamicKey5::packString($signature);
+        $buffer .= DynamicKey5::packString($appID);
         $buffer .= pack("I", $ts);
         $buffer .= pack("I", $salt);
         $buffer .= pack("I", $expiredTs);
@@ -75,10 +78,9 @@ $IN_CHANNEL_PERMISSION = 4;
         $buffer .= pack("S", count($extra));
         foreach ($extra as $key => $value) {
             $buffer .= pack("S", $key);
-            $buffer .= packString($value);
-        } 
+            $buffer .= DynamicKey5::packString($value);
+        }
 
         return $buffer;
     }
-
-?>
+}

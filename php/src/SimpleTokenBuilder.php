@@ -1,7 +1,6 @@
 <?php
 
 require "AccessToken.php";
-
 class SimpleTokenBuilder
 {
     const AttendeePrivileges = array(
@@ -62,7 +61,7 @@ class SimpleTokenBuilder
         $this->token->setUid($uid);
     }
     public static function initWithToken($token, $appCertificate, $channel, $uid){
-        $this->token = AccessToken::initWithToken($token, $appCertificate, $channel, $uid);
+        AccessToken::initWithToken($token, $appCertificate, $channel, $uid);
     }
     public function initPrivilege($role){
         $p = self::RolePrivileges[$role];

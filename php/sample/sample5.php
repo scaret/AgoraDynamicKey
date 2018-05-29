@@ -9,13 +9,11 @@ $randomInt = 58964981;
 $uid = 2882341273;
 $expiredTs = 1446455471;
 
-echo generateRecordingKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs) . "\n";
-echo generateMediaChannelKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs) . "\n";
+echo DynamicKey5::generateRecordingKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs) . "\n";
+echo DynamicKey5::generateMediaChannelKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs) . "\n";
 
-global $NO_UPLOAD;
 
-echo generateInChannelPermissionKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $NO_UPLOAD) . "\n";
+echo DynamicKey5::generateInChannelPermissionKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, DynamicKey5::NO_UPLOAD) . "\n";
 
-global $AUDIO_VIDEO_UPLOAD;
-echo generateInChannelPermissionKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, $AUDIO_VIDEO_UPLOAD) . "\n";
+echo DynamicKey5::generateInChannelPermissionKey($appID, $appCertificate, $channelName, $ts, $randomInt, $uid, $expiredTs, DynamicKey5::AUDIO_VIDEO_UPLOAD) . "\n";
 ?>
