@@ -40,8 +40,8 @@ Sample Code for generating AccessToken are available on the following platforms:
 
 ### Java
 
-+ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/java/src/io/agora/media/SimpleTokenBuilder.java
-+ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/java/src/io/agora/media/AccessToken.java
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/java/src/main/java/io/agora/media/SimpleTokenBuilder.java
++ https://github.com/AgoraIO/AgoraDynamicKey/blob/master/java/src/main/java/io/agora/media/AccessToken.java
 
 ### Node.js
 
