@@ -1,5 +1,5 @@
 {
-  "name": "agoradynamickey",
+  "name": "agora-dynamic-key",
   "version": "1.0.0",
   "description": "This page describes the authentication mechanism used by the Agora SDK, as well as providing the related code for generating AccessToken (v2.1.0) or Dynamic Key (v2.0.2 or earlier).",
   "main": "index.js",

@@ -2,7 +2,6 @@ var crypto = require('crypto');
 var crc32 = require('crc-32');
 var UINT32 = require('cuint').UINT32;
 var version = "006";
-var randomInt = Math.floor(Math.random() * 0xFFFFFFFF);
 const VERSION_LENGTH = 3;
 const APP_ID_LENGTH = 32;
 
@@ -12,7 +11,7 @@ var AccessToken = function (appID, appCertificate, channelName, uid) {
     this.appCertificate = appCertificate;
     this.channelName = channelName;
     this.messages = {};
-    this.salt = randomInt;
+    this.salt = Math.floor(Math.random() * 0xFFFFFFFF);
     this.ts = Math.floor(new Date() / 1000) + (24 * 3600);
     if (uid === 0) {
         this.uid = "";
