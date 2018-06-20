@@ -1,0 +1,24 @@
+{
+  "name": "agoradynamickey",
+  "version": "1.0.0",
+  "description": "This page describes the authentication mechanism used by the Agora SDK, as well as providing the related code for generating AccessToken (v2.1.0) or Dynamic Key (v2.0.2 or earlier).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgoraIO/AgoraDynamicKey.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AgoraIO/AgoraDynamicKey/issues"
+  },
+  "homepage": "https://github.com/AgoraIO/AgoraDynamicKey#readme",
+  "dependencies": {
+    "crc-32": "^1.2.0",
+    "cuint": "^0.2.2",
+    "md5": "^2.2.1"
+  }
+}
